@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Sharva {
     private static final String horizontalLine = "    __________________________________________";
+    private static String[] tasks = new String[100];
+    private static int taskCounter = 0;
 
     public static void sayHello() {
         System.out.println(horizontalLine);
@@ -9,9 +11,11 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void echo(String userInput) {
+    public static void addTask(String task) {
         System.out.println(horizontalLine);
-        System.out.println(userInput.equals("bye") ? "    Bye. Hope to see you again soon!" : "    " + userInput);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    added: " + task);
         System.out.println(horizontalLine);
     }
 
@@ -20,10 +24,10 @@ public class Sharva {
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
         while (!curr.equals("bye")) {
-            echo(curr);
+            addTask(curr);
             curr = scanner.nextLine();
         }
-        echo("bye");
+        System.out.println("Bye bro! See you later!");
         scanner.close();
     }
 }
