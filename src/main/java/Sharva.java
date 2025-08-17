@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Sharva {
     private static final String horizontalLine = "    __________________________________________";
-    private static String[] tasks = new String[100];
+    private static final String[] tasks = new String[100];
     private static int taskCounter = 0;
 
     public static void sayHello() {
@@ -27,6 +27,12 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    public static void sayBye() {
+        System.out.println(horizontalLine);
+        System.out.println("    Bye bro! See you later!");
+        System.out.println(horizontalLine);
+    }
+
     public static void main(String[] args) {
         sayHello();
         Scanner scanner = new Scanner(System.in);
@@ -39,7 +45,7 @@ public class Sharva {
             }
             curr = scanner.nextLine();
         }
-        System.out.println("Bye bro! See you later!");
+        sayBye();
         scanner.close();
     }
 }
