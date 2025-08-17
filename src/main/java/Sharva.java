@@ -34,6 +34,22 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    public static void markTask(int index) {
+        tasks[index].markAsDone();
+        System.out.println(horizontalLine);
+        System.out.println("    Nice! I've marked this task as done:");
+        System.out.println("    " + tasks[index]);
+        System.out.println(horizontalLine);
+    }
+
+    public static void unmarkTask(int index) {
+        tasks[index].undoTask();
+        System.out.println(horizontalLine);
+        System.out.println("    OK, I've marked this task as not done yet:");
+        System.out.println("    " + tasks[index]);
+        System.out.println(horizontalLine);
+    }
+
     public static void main(String[] args) {
         sayHello();
         Scanner scanner = new Scanner(System.in);
@@ -41,6 +57,12 @@ public class Sharva {
         while (!curr.equals("bye")) {
             if (curr.equals("list")) {
                 list();
+            } else if (curr.startsWith("mark")) {
+                int taskNumber = Integer.parseInt(curr.split(" ")[1]);
+                markTask(taskNumber - 1);
+            } else if (curr.startsWith("unmark")) {
+                int taskNumber = Integer.parseInt(curr.split(" ")[1]);
+                unmarkTask(taskNumber - 1);
             } else {
                 addTask(curr);
             }
