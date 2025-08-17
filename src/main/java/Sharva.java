@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Sharva {
     private static final String horizontalLine = "    __________________________________________";
-    private static final String[] tasks = new String[100];
+    private static final Task[] tasks = new Task[100];
     private static int taskCounter = 0;
 
     public static void sayHello() {
@@ -11,8 +11,9 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void addTask(String task) {
+    public static void addTask(String taskName) {
         System.out.println(horizontalLine);
+        Task task = new Task(taskName);
         tasks[taskCounter] = task;
         taskCounter++;
         System.out.println("    added: " + task);
