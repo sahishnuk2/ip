@@ -19,12 +19,24 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    public static void list() {
+        System.out.println(horizontalLine);
+        for (int i = 0; i < taskCounter; i++) {
+            System.out.println("    " + String.format("%d. %s", i + 1, tasks[i]));
+        }
+        System.out.println(horizontalLine);
+    }
+
     public static void main(String[] args) {
         sayHello();
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
         while (!curr.equals("bye")) {
-            addTask(curr);
+            if (curr.equals("list")) {
+                list();
+            } else {
+                addTask(curr);
+            }
             curr = scanner.nextLine();
         }
         System.out.println("Bye bro! See you later!");
