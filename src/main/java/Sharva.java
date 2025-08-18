@@ -117,6 +117,39 @@ public class Sharva {
                 addDeadline(taskName.toString(), by.toString());
             } else if (curr.startsWith("event")){
                 // add event task
+                String[] strs = curr.split(" ");
+                int len = strs.length;
+                StringBuilder taskName = new StringBuilder();
+                StringBuilder from = new StringBuilder();
+                StringBuilder to = new StringBuilder();
+                int i = 1;
+                while (!strs[i].equals("/from")) {
+                    taskName.append(strs[i]);
+                    taskName.append(" ");
+                    i++;
+                }
+                taskName.deleteCharAt(taskName.length() - 1);
+                // Now, i is at "from"
+                i++;
+
+                while (!strs[i].equals("/to")) {
+                    from.append(strs[i]);
+                    from.append(" ");
+                    i++;
+                }
+
+                from.deleteCharAt(from.length() - 1);
+                // Now, i is at "to"
+                i++;
+
+                while (i < len) {
+                    to.append(strs[i]);
+                    if (i != len - 1) {
+                        to.append(" ");
+                    }
+                    i++;
+                }
+                addEvent(taskName.toString(), from.toString(), to.toString());
             } else {
                 // invalid argument
                 System.out.println("Invalid Command, please try again");
