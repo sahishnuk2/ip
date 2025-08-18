@@ -11,9 +11,27 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void addTask(String taskName) {
+    public static void addTodo(String taskName) {
         System.out.println(horizontalLine);
-        Task task = new Task(taskName);
+        Task task = new ToDo(taskName);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    added: " + task);
+        System.out.println(horizontalLine);
+    }
+
+    public static void addDeadline(String taskName, String by) {
+        System.out.println(horizontalLine);
+        Task task = new Deadline(taskName, by);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    added: " + task);
+        System.out.println(horizontalLine);
+    }
+
+    public static void addEvent(String taskName, String from, String to) {
+        System.out.println(horizontalLine);
+        Task task = new Event(taskName, from, to);
         tasks[taskCounter] = task;
         taskCounter++;
         System.out.println("    added: " + task);
@@ -63,8 +81,15 @@ public class Sharva {
             } else if (curr.startsWith("unmark")) {
                 int taskNumber = Integer.parseInt(curr.split(" ")[1]);
                 unmarkTask(taskNumber - 1);
+            } else if (curr.startsWith("todo")) {
+                // add todo task
+            } else if (curr.startsWith("deadline")) {
+                // add deadline task
+            } else if (curr.startsWith("event")){
+                // add event task
             } else {
-                addTask(curr);
+                // invalid argument
+                System.out.println("Invalid Command, please try again");
             }
             curr = scanner.nextLine();
         }
