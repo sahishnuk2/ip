@@ -16,7 +16,9 @@ public class Sharva {
         Task task = new ToDo(taskName);
         tasks[taskCounter] = task;
         taskCounter++;
-        System.out.println("    added: " + task);
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
         System.out.println(horizontalLine);
     }
 
@@ -25,7 +27,9 @@ public class Sharva {
         Task task = new Deadline(taskName, by);
         tasks[taskCounter] = task;
         taskCounter++;
-        System.out.println("    added: " + task);
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
         System.out.println(horizontalLine);
     }
 
@@ -34,12 +38,15 @@ public class Sharva {
         Task task = new Event(taskName, from, to);
         tasks[taskCounter] = task;
         taskCounter++;
-        System.out.println("    added: " + task);
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
         System.out.println(horizontalLine);
     }
 
     public static void list() {
         System.out.println(horizontalLine);
+        System.out.println("    Here are the tasks in your list:");
         for (int i = 0; i < taskCounter; i++) {
             System.out.println("    " + String.format("%d. %s", i + 1, tasks[i]));
         }
