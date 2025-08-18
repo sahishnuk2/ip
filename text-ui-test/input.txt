@@ -1,0 +1,11 @@
+todo task1
+todo task2
+incorrect command
+deadline task3 /by 2 jun
+event task 4 /from 4pm /to 6pm
+list
+mark 2
+mark 3
+unmark 2
+list
+bye
