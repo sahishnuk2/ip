@@ -94,6 +94,27 @@ public class Sharva {
                 addTodo(taskName.toString());
             } else if (curr.startsWith("deadline")) {
                 // add deadline task
+                String[] strs = curr.split(" ");
+                int len = strs.length;
+                StringBuilder taskName = new StringBuilder();
+                StringBuilder by = new StringBuilder();
+                int i = 1;
+                while (!strs[i].equals("/by")) {
+                    taskName.append(strs[i]);
+                    taskName.append(" ");
+                    i++;
+                }
+                taskName.deleteCharAt(taskName.length() - 1);
+                // Now, i is at "by"
+                i++;
+                while (i < len) {
+                    by.append(strs[i]);
+                    if (i != len - 1) {
+                        by.append(" ");
+                    }
+                    i++;
+                }
+                addDeadline(taskName.toString(), by.toString());
             } else if (curr.startsWith("event")){
                 // add event task
             } else {
