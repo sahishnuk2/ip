@@ -82,7 +82,16 @@ public class Sharva {
                 int taskNumber = Integer.parseInt(curr.split(" ")[1]);
                 unmarkTask(taskNumber - 1);
             } else if (curr.startsWith("todo")) {
-                // add todo task
+                String[] strs = curr.split(" ");
+                int len = strs.length;
+                StringBuilder taskName = new StringBuilder();
+                for (int i = 1; i < len; i++) {
+                    taskName.append(strs[i]);
+                    if (i != len - 1) {
+                        taskName.append(" ");
+                    }
+                }
+                addTodo(taskName.toString());
             } else if (curr.startsWith("deadline")) {
                 // add deadline task
             } else if (curr.startsWith("event")){
