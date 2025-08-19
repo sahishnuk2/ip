@@ -107,7 +107,6 @@ public class Sharva {
         unmarkTask(taskNumber - 1);
     }
 
-
     public static void list() {
         System.out.println(horizontalLine);
         System.out.println("    Here are the tasks in your list:");
@@ -115,6 +114,10 @@ public class Sharva {
             System.out.println("    " + String.format("%d. %s", i + 1, tasks[i]));
         }
         System.out.println(horizontalLine);
+    }
+
+    public static void handleInvalidInput() throws InvalidCommandException {
+        throw new InvalidCommandException();
     }
 
     public static void sayBye() {
@@ -222,8 +225,13 @@ public class Sharva {
                     System.out.println(horizontalLine);
                 }
             } else {
-                // invalid argument
-                System.out.println("Invalid Command, please try again");
+                try {
+                    handleInvalidInput();
+                } catch (SharvaException e) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
+                }
             }
             curr = scanner.nextLine();
         }
