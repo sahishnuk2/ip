@@ -11,8 +11,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    // Missing Index problem also need an exception
-
+    // Parser functions
     public static void toDo(String input) throws MissingArgumentsException {
         // if all goes well, addTodo(taskName)
         if (input.trim().equals("todo")) {
@@ -65,38 +64,49 @@ public class Sharva {
         addEvent(taskName, from, to);
     }
 
-    public static void addTodo(String taskName) {
-        System.out.println(horizontalLine);
-        Task task = new ToDo(taskName);
-        tasks[taskCounter] = task;
-        taskCounter++;
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
-        System.out.println(horizontalLine);
+    public static void mark(String input) throws MissingArgumentsException, InvalidIndexException, InvalidCommandException {
+        if (input.trim().equals("mark")) {
+            throw new MissingArgumentsException("Which task must I mark?");
+        }
+
+        String[] strs = input.split(" ");
+        if (strs.length < 2) {
+            throw new InvalidCommandException();
+            // For errors like marks, mark1, markee...
+        } else if (strs.length > 2) {
+            throw new InvalidIndexException();
+        }
+
+        if (!strs[1].matches("\\d+")) {
+            throw new InvalidIndexException();
+        }
+        int taskNumber = Integer.parseInt(strs[1]);
+        if (taskNumber <= 0 || taskNumber > taskCounter) {
+            throw new InvalidIndexException();
+        }
+        markTask(taskNumber - 1);
     }
 
-    public static void addDeadline(String taskName, String by) {
-        System.out.println(horizontalLine);
-        Task task = new Deadline(taskName, by);
-        tasks[taskCounter] = task;
-        taskCounter++;
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
-        System.out.println(horizontalLine);
+    public static void unmark(String input) throws MissingArgumentsException, InvalidIndexException, InvalidCommandException {
+        if (input.trim().equals("unmark")) {
+            throw new MissingArgumentsException("Which task must I unmark?");
+        }
+
+        String[] strs = input.split(" ");
+        if (strs.length < 2) {
+            throw new InvalidCommandException();
+            // For errors like marks, mark1, markee...
+        } else if (strs.length > 2) {
+            throw new InvalidIndexException();
+        }
+
+        int taskNumber = Integer.parseInt(strs[1]);
+        if (taskNumber <= 0 || taskNumber > taskCounter) {
+            throw new InvalidIndexException();
+        }
+        unmarkTask(taskNumber - 1);
     }
 
-    public static void addEvent(String taskName, String from, String to) {
-        System.out.println(horizontalLine);
-        Task task = new Event(taskName, from, to);
-        tasks[taskCounter] = task;
-        taskCounter++;
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
-        System.out.println(horizontalLine);
-    }
 
     public static void list() {
         System.out.println(horizontalLine);
@@ -113,7 +123,8 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void markTask(int index) {
+    //Helper methods for marking
+    private static void markTask(int index) throws InvalidIndexException{
         tasks[index].markAsDone();
         System.out.println(horizontalLine);
         System.out.println("    Nice! I've marked this task as done:");
@@ -121,11 +132,45 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void unmarkTask(int index) {
+    private static void unmarkTask(int index) throws InvalidIndexException {
         tasks[index].undoTask();
         System.out.println(horizontalLine);
         System.out.println("    OK, I've marked this task as not done yet:");
         System.out.println("    " + tasks[index]);
+        System.out.println(horizontalLine);
+    }
+
+    // Helper methods to add tasks
+    private static void addTodo(String taskName) {
+        System.out.println(horizontalLine);
+        Task task = new ToDo(taskName);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(horizontalLine);
+    }
+
+    private static void addDeadline(String taskName, String by) {
+        System.out.println(horizontalLine);
+        Task task = new Deadline(taskName, by);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(horizontalLine);
+    }
+
+    private static void addEvent(String taskName, String from, String to) {
+        System.out.println(horizontalLine);
+        Task task = new Event(taskName, from, to);
+        tasks[taskCounter] = task;
+        taskCounter++;
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
         System.out.println(horizontalLine);
     }
 
@@ -137,11 +182,21 @@ public class Sharva {
             if (curr.equals("list")) {
                 list();
             } else if (curr.startsWith("mark")) {
-                int taskNumber = Integer.parseInt(curr.split(" ")[1]);
-                markTask(taskNumber - 1);
+                try {
+                    mark(curr);
+                } catch (MissingArgumentsException | InvalidIndexException | InvalidCommandException e /* To change later */) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
+                }
             } else if (curr.startsWith("unmark")) {
-                int taskNumber = Integer.parseInt(curr.split(" ")[1]);
-                unmarkTask(taskNumber - 1);
+                try {
+                    unmark(curr);
+                } catch (MissingArgumentsException | InvalidIndexException | InvalidCommandException e /* To change later */) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
+                }
             } else if (curr.startsWith("todo")) {
                 try {
                    toDo(curr);
