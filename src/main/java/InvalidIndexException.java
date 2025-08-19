@@ -1,4 +1,4 @@
-public class InvalidIndexException extends Exception {
+public class InvalidIndexException extends SharvaException {
     public InvalidIndexException() {
         super("Invalid task index!");
     }

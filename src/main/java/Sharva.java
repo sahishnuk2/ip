@@ -184,7 +184,7 @@ public class Sharva {
             } else if (curr.startsWith("mark")) {
                 try {
                     mark(curr);
-                } catch (MissingArgumentsException | InvalidIndexException | InvalidCommandException e /* To change later */) {
+                } catch (SharvaException e /* To change later */) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
@@ -192,7 +192,7 @@ public class Sharva {
             } else if (curr.startsWith("unmark")) {
                 try {
                     unmark(curr);
-                } catch (MissingArgumentsException | InvalidIndexException | InvalidCommandException e /* To change later */) {
+                } catch (SharvaException e /* To change later */) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
@@ -200,7 +200,7 @@ public class Sharva {
             } else if (curr.startsWith("todo")) {
                 try {
                    toDo(curr);
-                } catch (MissingArgumentsException e) {
+                } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
@@ -208,7 +208,7 @@ public class Sharva {
             } else if (curr.startsWith("deadline")) {
                 try {
                     deadline(curr);
-                } catch (MissingArgumentsException e) {
+                } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
@@ -216,7 +216,7 @@ public class Sharva {
             } else if (curr.startsWith("event")){
                 try {
                     event(curr);
-                } catch (MissingArgumentsException e) {
+                } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);

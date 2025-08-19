@@ -1,4 +1,4 @@
-public class MissingArgumentsException extends Exception {
+public class MissingArgumentsException extends SharvaException {
     public MissingArgumentsException(String message) {
         super(message);
     }
