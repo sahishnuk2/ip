@@ -11,6 +11,60 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    // Missing Index problem also need an exception
+
+    public static void toDo(String input) throws MissingArgumentsException {
+        // if all goes well, addTodo(taskName)
+        if (input.trim().equals("todo")) {
+            throw new MissingArgumentsException("Task name is missing!");
+        }
+        String taskName = input.substring(4).trim();
+        addTodo(taskName);
+    }
+
+    public static void deadline(String input) throws MissingArgumentsException {
+        int byIndex = input.indexOf("/by");
+        if (byIndex == -1) {
+            throw new MissingArgumentsException("Due Date is missing!");
+        }
+        String taskName = input.substring(8, byIndex).trim();
+        if (taskName.isEmpty()) {
+            throw new MissingArgumentsException("Task name is missing!");
+        }
+        String by = input.substring(byIndex + 3).trim();
+        if (by.isEmpty()) {
+            throw new MissingArgumentsException("By date is missing!");
+        }
+        addDeadline(taskName, by);
+    }
+
+    public static void event(String input) throws MissingArgumentsException {
+        int fromIndex = input.indexOf("/from");
+        if (fromIndex == -1) {
+            throw new MissingArgumentsException("From date is missing!");
+        }
+        int toIndex = input.indexOf("/to");
+        if (toIndex == -1) {
+            throw new MissingArgumentsException("To data is missing!");
+        }
+        if (toIndex < fromIndex) {
+            // new exception
+        }
+        String taskName = input.substring(5, fromIndex).trim();
+        if (taskName.isEmpty()) {
+            throw new MissingArgumentsException("Task name is missing!");
+        }
+        String from = input.substring(fromIndex + 5, toIndex).trim();
+        if (from.isEmpty()) {
+            throw new MissingArgumentsException("From date is missing!");
+        }
+        String to = input.substring(toIndex + 3).trim();
+        if (to.isEmpty()) {
+            throw new MissingArgumentsException("To date is missing!");
+        }
+        addEvent(taskName, from, to);
+    }
+
     public static void addTodo(String taskName) {
         System.out.println(horizontalLine);
         Task task = new ToDo(taskName);
@@ -89,74 +143,29 @@ public class Sharva {
                 int taskNumber = Integer.parseInt(curr.split(" ")[1]);
                 unmarkTask(taskNumber - 1);
             } else if (curr.startsWith("todo")) {
-                String[] strs = curr.split(" ");
-                int len = strs.length;
-                StringBuilder taskName = new StringBuilder();
-                for (int i = 1; i < len; i++) {
-                    taskName.append(strs[i]);
-                    if (i != len - 1) {
-                        taskName.append(" ");
-                    }
+                try {
+                   toDo(curr);
+                } catch (MissingArgumentsException e) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
                 }
-                addTodo(taskName.toString());
             } else if (curr.startsWith("deadline")) {
-                // add deadline task
-                String[] strs = curr.split(" ");
-                int len = strs.length;
-                StringBuilder taskName = new StringBuilder();
-                StringBuilder by = new StringBuilder();
-                int i = 1;
-                while (!strs[i].equals("/by")) {
-                    taskName.append(strs[i]);
-                    taskName.append(" ");
-                    i++;
+                try {
+                    deadline(curr);
+                } catch (MissingArgumentsException e) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
                 }
-                taskName.deleteCharAt(taskName.length() - 1);
-                // Now, i is at "by"
-                i++;
-                while (i < len) {
-                    by.append(strs[i]);
-                    if (i != len - 1) {
-                        by.append(" ");
-                    }
-                    i++;
-                }
-                addDeadline(taskName.toString(), by.toString());
             } else if (curr.startsWith("event")){
-                // add event task
-                String[] strs = curr.split(" ");
-                int len = strs.length;
-                StringBuilder taskName = new StringBuilder();
-                StringBuilder from = new StringBuilder();
-                StringBuilder to = new StringBuilder();
-                int i = 1;
-                while (!strs[i].equals("/from")) {
-                    taskName.append(strs[i]);
-                    taskName.append(" ");
-                    i++;
+                try {
+                    event(curr);
+                } catch (MissingArgumentsException e) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
                 }
-                taskName.deleteCharAt(taskName.length() - 1);
-                // Now, i is at "from"
-                i++;
-
-                while (!strs[i].equals("/to")) {
-                    from.append(strs[i]);
-                    from.append(" ");
-                    i++;
-                }
-
-                from.deleteCharAt(from.length() - 1);
-                // Now, i is at "to"
-                i++;
-
-                while (i < len) {
-                    to.append(strs[i]);
-                    if (i != len - 1) {
-                        to.append(" ");
-                    }
-                    i++;
-                }
-                addEvent(taskName.toString(), from.toString(), to.toString());
             } else {
                 // invalid argument
                 System.out.println("Invalid Command, please try again");
