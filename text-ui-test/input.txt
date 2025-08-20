@@ -1,11 +1,27 @@
-todo task1
-todo task2
-incorrect command
-deadline task3 /by 2 jun
-event task 4 /from 4pm /to 6pm
+todo
+todofish
+todobuymilk
+deadline
+deadline /by tmr
+deadline tn /by tmr
+deadline tn/by tmr
+event
+event /from /to
+event /from now /to tmr
+event tn /from now /to tmr
+event tn/from now /to tmr
+event tn /from now/to tmr
+event tn /from now /totmr
+event tn /fromnow /to tmr
+todo buy milk
+mark 1
 list
-mark 2
-mark 3
-unmark 2
+mark 1
 list
+unmark 1
+list
+unmark 1
+list
+mark 99
+unmark 99
 bye
