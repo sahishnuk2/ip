@@ -22,6 +22,11 @@ unmark 1
 list
 unmark 1
 list
+delete 1
+delete 4
+delete
+delete ii
+delete1
 mark 99
 unmark 99
 bye

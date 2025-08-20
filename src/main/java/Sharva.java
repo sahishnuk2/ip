@@ -14,6 +14,7 @@ public class Sharva {
     }
 
     // Parser functions
+    // Adding tasks
     public static void toDo(String input) throws SharvaException {
         if (input.trim().equals("todo")) {
             // for multiple spaces after todo
@@ -74,6 +75,8 @@ public class Sharva {
         addEvent(taskName, from, to);
     }
 
+
+    // Marking tasks
     public static void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
             throw new InvalidArgumentsException("Which task must I mark?");
@@ -115,6 +118,29 @@ public class Sharva {
             throw new InvalidIndexException();
         }
         unmarkTask(taskNumber - 1);
+    }
+
+    // Deleting tasks
+    public static void delete(String input) throws SharvaException {
+        if (input.trim().equals("delete")) {
+            throw new InvalidArgumentsException("Which task must I delete?");
+        }
+
+        String[] strs = input.split(" ");
+        if (strs.length < 2) {
+            throw new InvalidCommandException();
+        } else if (strs.length > 2) {
+            throw new InvalidIndexException();
+        }
+
+        if (!strs[1].matches("\\d+")) {
+            throw new InvalidIndexException();
+        }
+        int taskNumber = Integer.parseInt(strs[1]);
+        if (taskNumber <= 0 || taskNumber > taskCounter) {
+            throw new InvalidIndexException();
+        }
+        deleteTask(taskNumber - 1);
     }
 
     public static void list() {
@@ -190,6 +216,18 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    // Helper method to delete tasks
+    private static void deleteTask(int index) {
+        Task task = tasks.get(index);
+        tasks.remove(index);
+        taskCounter--;
+        System.out.println(horizontalLine);
+        System.out.println("    Noted. I've removed this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(horizontalLine);
+    }
+
     public static void main(String[] args) {
         sayHello();
         Scanner scanner = new Scanner(System.in);
@@ -200,7 +238,7 @@ public class Sharva {
             } else if (curr.startsWith("mark")) {
                 try {
                     mark(curr);
-                } catch (SharvaException e /* To change later */) {
+                } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
@@ -208,7 +246,15 @@ public class Sharva {
             } else if (curr.startsWith("unmark")) {
                 try {
                     unmark(curr);
-                } catch (SharvaException e /* To change later */) {
+                } catch (SharvaException e) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + e.getMessage());
+                    System.out.println(horizontalLine);
+                }
+            } else if (curr.startsWith("delete")) {
+                try {
+                    delete(curr);
+                } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
