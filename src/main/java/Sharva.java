@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Sharva {
-    private static final String horizontalLine = "    __________________________________________";
+    private static final String horizontalLine = "    _____________________________________________";
     private static final Task[] tasks = new Task[100];
     private static int taskCounter = 0;
 
@@ -12,17 +12,21 @@ public class Sharva {
     }
 
     // Parser functions
-    public static void toDo(String input) throws MissingArgumentsException {
-        // if all goes well, addTodo(taskName)
+    public static void toDo(String input) throws SharvaException {
         if (input.trim().equals("todo")) {
-            throw new MissingArgumentsException("Task name is missing!");
+            // for multiple spaces after todo
+            throw new MissingArgumentsException("The description of a todo cannot be empty");
         }
-        String taskName = input.substring(4).trim();
+        String taskName = input.substring(5);
         addTodo(taskName);
     }
 
-    public static void deadline(String input) throws MissingArgumentsException {
-        int byIndex = input.indexOf("/by");
+    public static void deadline(String input) throws SharvaException {
+        if (input.trim().equals("deadline")) {
+            // for multiple spaces after deadline
+            throw new MissingArgumentsException("The description of a deadline cannot be empty");
+        }
+        int byIndex = input.indexOf(" /by ");
         if (byIndex == -1) {
             throw new MissingArgumentsException("Due Date is missing!");
         }
@@ -30,41 +34,45 @@ public class Sharva {
         if (taskName.isEmpty()) {
             throw new MissingArgumentsException("Task name is missing!");
         }
-        String by = input.substring(byIndex + 3).trim();
+        String by = input.substring(byIndex + 5).trim();
         if (by.isEmpty()) {
-            throw new MissingArgumentsException("By date is missing!");
+            throw new MissingArgumentsException("Due Date is missing!");
         }
         addDeadline(taskName, by);
     }
 
-    public static void event(String input) throws MissingArgumentsException {
-        int fromIndex = input.indexOf("/from");
+    public static void event(String input) throws SharvaException {
+        if (input.trim().equals("event")) {
+            // for multiple spaces after event
+            throw new MissingArgumentsException("The description of a event cannot be empty");
+        }
+        int fromIndex = input.indexOf(" /from ");
         if (fromIndex == -1) {
             throw new MissingArgumentsException("From date is missing!");
         }
-        int toIndex = input.indexOf("/to");
+        int toIndex = input.indexOf(" /to ");
         if (toIndex == -1) {
-            throw new MissingArgumentsException("To data is missing!");
+            throw new MissingArgumentsException("To date is missing!");
         }
         if (toIndex < fromIndex) {
-            // new exception
+            throw new MissingArgumentsException("To is before from, that doesn't make sense...");
         }
         String taskName = input.substring(5, fromIndex).trim();
         if (taskName.isEmpty()) {
             throw new MissingArgumentsException("Task name is missing!");
         }
-        String from = input.substring(fromIndex + 5, toIndex).trim();
+        String from = input.substring(fromIndex + 7, toIndex).trim();
         if (from.isEmpty()) {
             throw new MissingArgumentsException("From date is missing!");
         }
-        String to = input.substring(toIndex + 3).trim();
+        String to = input.substring(toIndex + 5).trim();
         if (to.isEmpty()) {
             throw new MissingArgumentsException("To date is missing!");
         }
         addEvent(taskName, from, to);
     }
 
-    public static void mark(String input) throws MissingArgumentsException, InvalidIndexException, InvalidCommandException {
+    public static void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
             throw new MissingArgumentsException("Which task must I mark?");
         }
@@ -87,7 +95,7 @@ public class Sharva {
         markTask(taskNumber - 1);
     }
 
-    public static void unmark(String input) throws MissingArgumentsException, InvalidIndexException, InvalidCommandException {
+    public static void unmark(String input) throws SharvaException {
         if (input.trim().equals("unmark")) {
             throw new MissingArgumentsException("Which task must I unmark?");
         }
@@ -116,7 +124,10 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    public static void handleInvalidInput() throws InvalidCommandException {
+    public static void handleInvalidInput(String input) throws SharvaException {
+        if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
+            throw new MissingArgumentsException("The description of a " + input + " cannot be empty");
+        }
         throw new InvalidCommandException();
     }
 
@@ -127,7 +138,7 @@ public class Sharva {
     }
 
     //Helper methods for marking
-    private static void markTask(int index) throws InvalidIndexException{
+    private static void markTask(int index) {
         tasks[index].markAsDone();
         System.out.println(horizontalLine);
         System.out.println("    Nice! I've marked this task as done:");
@@ -135,7 +146,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void unmarkTask(int index) throws InvalidIndexException {
+    private static void unmarkTask(int index) {
         tasks[index].undoTask();
         System.out.println(horizontalLine);
         System.out.println("    OK, I've marked this task as not done yet:");
@@ -200,7 +211,7 @@ public class Sharva {
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
                 }
-            } else if (curr.startsWith("todo")) {
+            } else if (curr.startsWith("todo ")) {
                 try {
                    toDo(curr);
                 } catch (SharvaException e) {
@@ -208,7 +219,7 @@ public class Sharva {
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
                 }
-            } else if (curr.startsWith("deadline")) {
+            } else if (curr.startsWith("deadline ")) {
                 try {
                     deadline(curr);
                 } catch (SharvaException e) {
@@ -216,7 +227,7 @@ public class Sharva {
                     System.out.println("    " + e.getMessage());
                     System.out.println(horizontalLine);
                 }
-            } else if (curr.startsWith("event")){
+            } else if (curr.startsWith("event ")){
                 try {
                     event(curr);
                 } catch (SharvaException e) {
@@ -226,7 +237,7 @@ public class Sharva {
                 }
             } else {
                 try {
-                    handleInvalidInput();
+                    handleInvalidInput(curr);
                 } catch (SharvaException e) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + e.getMessage());
