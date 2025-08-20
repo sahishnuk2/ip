@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Sharva {
     private static final String horizontalLine = "    _____________________________________________";
-    private static final Task[] tasks = new Task[100];
+    private static final List<Task> tasks = new ArrayList<>();
     private static int taskCounter = 0;
 
     public static void sayHello() {
@@ -119,7 +121,7 @@ public class Sharva {
         System.out.println(horizontalLine);
         System.out.println("    Here are the tasks in your list:");
         for (int i = 0; i < taskCounter; i++) {
-            System.out.println("    " + String.format("%d. %s", i + 1, tasks[i]));
+            System.out.println("    " + String.format("%d. %s", i + 1, tasks.get(i)));
         }
         System.out.println(horizontalLine);
     }
@@ -139,18 +141,18 @@ public class Sharva {
 
     //Helper methods for marking
     private static void markTask(int index) throws SharvaException {
-        tasks[index].markAsDone();
+        tasks.get(index).markAsDone();
         System.out.println(horizontalLine);
         System.out.println("    Nice! I've marked this task as done:");
-        System.out.println("    " + tasks[index]);
+        System.out.println("    " + tasks.get(index));
         System.out.println(horizontalLine);
     }
 
     private static void unmarkTask(int index) throws SharvaException {
-        tasks[index].undoTask();
+        tasks.get(index).undoTask();
         System.out.println(horizontalLine);
         System.out.println("    OK, I've marked this task as not done yet:");
-        System.out.println("    " + tasks[index]);
+        System.out.println("    " + tasks.get(index));
         System.out.println(horizontalLine);
     }
 
@@ -158,7 +160,7 @@ public class Sharva {
     private static void addTodo(String taskName) {
         System.out.println(horizontalLine);
         Task task = new ToDo(taskName);
-        tasks[taskCounter] = task;
+        tasks.add(task);
         taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
@@ -169,7 +171,7 @@ public class Sharva {
     private static void addDeadline(String taskName, String by) {
         System.out.println(horizontalLine);
         Task task = new Deadline(taskName, by);
-        tasks[taskCounter] = task;
+        tasks.add(task);
         taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
@@ -180,7 +182,7 @@ public class Sharva {
     private static void addEvent(String taskName, String from, String to) {
         System.out.println(horizontalLine);
         Task task = new Event(taskName, from, to);
-        tasks[taskCounter] = task;
+        tasks.add(task);
         taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
