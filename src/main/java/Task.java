@@ -7,11 +7,17 @@ public class Task {
         this.isDone = false;
     }
 
-    public void markAsDone() {
+    public void markAsDone() throws SharvaException {
+        if (isDone) {
+            throw new InvalidArgumentsException("Completing a completed task? How hardworking");
+        }
         this.isDone = true;
     }
 
-    public void undoTask() {
+    public void undoTask() throws SharvaException {
+        if (!isDone) {
+            throw new InvalidArgumentsException("Bro, the task is not even completed");
+        }
         this.isDone = false;
     }
 

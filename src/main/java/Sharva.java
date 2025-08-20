@@ -15,7 +15,7 @@ public class Sharva {
     public static void toDo(String input) throws SharvaException {
         if (input.trim().equals("todo")) {
             // for multiple spaces after todo
-            throw new MissingArgumentsException("The description of a todo cannot be empty");
+            throw new InvalidArgumentsException("The description of a todo cannot be empty");
         }
         String taskName = input.substring(5);
         addTodo(taskName);
@@ -24,19 +24,19 @@ public class Sharva {
     public static void deadline(String input) throws SharvaException {
         if (input.trim().equals("deadline")) {
             // for multiple spaces after deadline
-            throw new MissingArgumentsException("The description of a deadline cannot be empty");
+            throw new InvalidArgumentsException("The description of a deadline cannot be empty");
         }
         int byIndex = input.indexOf(" /by ");
         if (byIndex == -1) {
-            throw new MissingArgumentsException("Due Date is missing!");
+            throw new InvalidArgumentsException("When is it due?");
         }
         String taskName = input.substring(8, byIndex).trim();
         if (taskName.isEmpty()) {
-            throw new MissingArgumentsException("Task name is missing!");
+            throw new InvalidArgumentsException("What's the task name?");
         }
         String by = input.substring(byIndex + 5).trim();
         if (by.isEmpty()) {
-            throw new MissingArgumentsException("Due Date is missing!");
+            throw new InvalidArgumentsException("When is it due?");
         }
         addDeadline(taskName, by);
     }
@@ -44,37 +44,37 @@ public class Sharva {
     public static void event(String input) throws SharvaException {
         if (input.trim().equals("event")) {
             // for multiple spaces after event
-            throw new MissingArgumentsException("The description of a event cannot be empty");
+            throw new InvalidArgumentsException("The description of a event cannot be empty");
         }
         int fromIndex = input.indexOf(" /from ");
         if (fromIndex == -1) {
-            throw new MissingArgumentsException("From date is missing!");
+            throw new InvalidArgumentsException("When does the event start?");
         }
         int toIndex = input.indexOf(" /to ");
         if (toIndex == -1) {
-            throw new MissingArgumentsException("To date is missing!");
+            throw new InvalidArgumentsException("When does the event end?");
         }
         if (toIndex < fromIndex) {
-            throw new MissingArgumentsException("To is before from, that doesn't make sense...");
+            throw new InvalidArgumentsException("To is before from, that doesn't make sense...");
         }
         String taskName = input.substring(5, fromIndex).trim();
         if (taskName.isEmpty()) {
-            throw new MissingArgumentsException("Task name is missing!");
+            throw new InvalidArgumentsException("What's the event name?");
         }
         String from = input.substring(fromIndex + 7, toIndex).trim();
         if (from.isEmpty()) {
-            throw new MissingArgumentsException("From date is missing!");
+            throw new InvalidArgumentsException("When does the event start?");
         }
         String to = input.substring(toIndex + 5).trim();
         if (to.isEmpty()) {
-            throw new MissingArgumentsException("To date is missing!");
+            throw new InvalidArgumentsException("When does the event end?");
         }
         addEvent(taskName, from, to);
     }
 
     public static void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
-            throw new MissingArgumentsException("Which task must I mark?");
+            throw new InvalidArgumentsException("Which task must I mark?");
         }
 
         String[] strs = input.split(" ");
@@ -97,7 +97,7 @@ public class Sharva {
 
     public static void unmark(String input) throws SharvaException {
         if (input.trim().equals("unmark")) {
-            throw new MissingArgumentsException("Which task must I unmark?");
+            throw new InvalidArgumentsException("Which task must I unmark?");
         }
 
         String[] strs = input.split(" ");
@@ -126,7 +126,7 @@ public class Sharva {
 
     public static void handleInvalidInput(String input) throws SharvaException {
         if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
-            throw new MissingArgumentsException("The description of a " + input + " cannot be empty");
+            throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
         }
         throw new InvalidCommandException();
     }
@@ -138,7 +138,7 @@ public class Sharva {
     }
 
     //Helper methods for marking
-    private static void markTask(int index) {
+    private static void markTask(int index) throws SharvaException {
         tasks[index].markAsDone();
         System.out.println(horizontalLine);
         System.out.println("    Nice! I've marked this task as done:");
@@ -146,7 +146,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void unmarkTask(int index) {
+    private static void unmarkTask(int index) throws SharvaException {
         tasks[index].undoTask();
         System.out.println(horizontalLine);
         System.out.println("    OK, I've marked this task as not done yet:");
