@@ -233,64 +233,35 @@ public class Sharva {
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
         while (!curr.equals("bye")) {
-            if (curr.equals("list")) {
-                list();
-            } else if (curr.startsWith("mark")) {
-                try {
+            try {
+                if (curr.equals("list")) {
+                    list();
+                } else if (curr.startsWith("mark")) {
                     mark(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else if (curr.startsWith("unmark")) {
-                try {
+                } else if (curr.startsWith("unmark")) {
+
                     unmark(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else if (curr.startsWith("delete")) {
-                try {
+
+                } else if (curr.startsWith("delete")) {
                     delete(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else if (curr.startsWith("todo ")) {
-                try {
-                   toDo(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else if (curr.startsWith("deadline ")) {
-                try {
+
+                } else if (curr.startsWith("todo ")) {
+                    toDo(curr);
+
+                } else if (curr.startsWith("deadline ")) {
                     deadline(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else if (curr.startsWith("event ")){
-                try {
+
+                } else if (curr.startsWith("event ")){
                     event(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            } else {
-                try {
+                } else {
+
                     handleInvalidInput(curr);
-                } catch (SharvaException e) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + e.getMessage());
-                    System.out.println(horizontalLine);
+
                 }
+            } catch (SharvaException e) {
+                System.out.println(horizontalLine);
+                System.out.println("    " + e.getMessage());
+                System.out.println(horizontalLine);
             }
             curr = scanner.nextLine();
         }
