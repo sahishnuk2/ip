@@ -14,6 +14,6 @@ public class Deadline extends Task {
     @Override
     public String toSaveString() {
         int status = super.getIsDone() ? 1 : 0;
-        return String.format("D *|* %d *|* %s *|* %s", status, super.getTaskDescription(), this.by);
+        return String.format("D @@@ %d @@@ %s @@@ %s", status, super.getTaskDescription(), this.by);
     }
 }

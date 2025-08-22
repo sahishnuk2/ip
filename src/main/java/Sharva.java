@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -5,7 +9,6 @@ import java.util.Scanner;
 public class Sharva {
     private static final String horizontalLine = "    _____________________________________________";
     private static final List<Task> tasks = new ArrayList<>();
-    private static int taskCounter = 0;
 
     public static void sayHello() {
         System.out.println(horizontalLine);
@@ -94,7 +97,7 @@ public class Sharva {
             throw new InvalidIndexException();
         }
         int taskNumber = Integer.parseInt(strs[1]);
-        if (taskNumber <= 0 || taskNumber > taskCounter) {
+        if (taskNumber <= 0 || taskNumber > tasks.size()) {
             throw new InvalidIndexException();
         }
         markTask(taskNumber - 1);
@@ -114,7 +117,7 @@ public class Sharva {
         }
 
         int taskNumber = Integer.parseInt(strs[1]);
-        if (taskNumber <= 0 || taskNumber > taskCounter) {
+        if (taskNumber <= 0 || taskNumber > tasks.size()) {
             throw new InvalidIndexException();
         }
         unmarkTask(taskNumber - 1);
@@ -137,7 +140,7 @@ public class Sharva {
             throw new InvalidIndexException();
         }
         int taskNumber = Integer.parseInt(strs[1]);
-        if (taskNumber <= 0 || taskNumber > taskCounter) {
+        if (taskNumber <= 0 || taskNumber > tasks.size()) {
             throw new InvalidIndexException();
         }
         deleteTask(taskNumber - 1);
@@ -146,8 +149,8 @@ public class Sharva {
     public static void list() {
         System.out.println(horizontalLine);
         System.out.println("    Here are the tasks in your list:");
-        for (int i = 0; i < taskCounter; i++) {
-            System.out.println("    " + String.format("%d. %s", i + 1, tasks.get(i)));
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("    " + String.format("%d. %s", i + 1, tasks.get(i).toString()));
         }
         System.out.println(horizontalLine);
     }
@@ -187,10 +190,9 @@ public class Sharva {
         System.out.println(horizontalLine);
         Task task = new ToDo(taskName);
         tasks.add(task);
-        taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
         System.out.println(horizontalLine);
     }
 
@@ -198,10 +200,9 @@ public class Sharva {
         System.out.println(horizontalLine);
         Task task = new Deadline(taskName, by);
         tasks.add(task);
-        taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
         System.out.println(horizontalLine);
     }
 
@@ -209,10 +210,9 @@ public class Sharva {
         System.out.println(horizontalLine);
         Task task = new Event(taskName, from, to);
         tasks.add(task);
-        taskCounter++;
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
         System.out.println(horizontalLine);
     }
 
@@ -220,15 +220,82 @@ public class Sharva {
     private static void deleteTask(int index) {
         Task task = tasks.get(index);
         tasks.remove(index);
-        taskCounter--;
         System.out.println(horizontalLine);
         System.out.println("    Noted. I've removed this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", taskCounter));
+        System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
         System.out.println(horizontalLine);
     }
 
+
+    public static void save() {
+        StringBuilder sb = new StringBuilder();
+        for (Task task : tasks) {
+            sb.append(task.toSaveString()).append("\n");
+        }
+        String allTasks = sb.toString();
+        saveTasks("./data/sharva.txt", allTasks);
+
+    }
+
+    private static void saveTasks(String location, String allTasks) {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(location, false);
+            fileWriter.write(allTasks);
+        } catch (IOException e) {
+            System.out.println("open error");
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    System.out.println("close error");
+                }
+            }
+        }
+    }
+
+    public static void load() {
+        File sharva = new File("./data/sharva.txt");
+        sharva.getParentFile().mkdirs();
+
+        if (!sharva.exists()) {
+            try {
+                sharva.createNewFile();
+            } catch (IOException e) {
+                System.out.println("error in creating file");
+                return;
+            }
+        }
+
+        try (Scanner scanner = new Scanner(sharva)) {
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split(" @@@ ");
+                Task task;
+                if (parts[0].equals("T")) {
+                    task = new ToDo(parts[2]);
+                } else if (parts[0].equals("D")) {
+                    task = new Deadline(parts[2], parts[3]);
+                } else {
+                    task = new Event(parts[2], parts[3], parts[4]);
+                }
+                if (parts[1].equals("1")) {
+                    try {
+                        task.markAsDone();
+                    } catch (SharvaException e) {
+                        System.out.println("marking a marked task, by right this shldnt happen");
+                    }
+                }
+                tasks.add(task);
+            }
+        } catch (IOException e) {
+            System.out.println("problem!");
+        }
+    }
+
     public static void main(String[] args) {
+        load();
         sayHello();
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
@@ -239,25 +306,19 @@ public class Sharva {
                 } else if (curr.startsWith("mark")) {
                     mark(curr);
                 } else if (curr.startsWith("unmark")) {
-
                     unmark(curr);
-
                 } else if (curr.startsWith("delete")) {
                     delete(curr);
-
                 } else if (curr.startsWith("todo ")) {
                     toDo(curr);
-
                 } else if (curr.startsWith("deadline ")) {
                     deadline(curr);
-
                 } else if (curr.startsWith("event ")){
                     event(curr);
                 } else {
-
                     handleInvalidInput(curr);
-
                 }
+                save();
             } catch (SharvaException e) {
                 System.out.println(horizontalLine);
                 System.out.println("    " + e.getMessage());

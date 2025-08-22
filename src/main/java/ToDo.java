@@ -12,6 +12,6 @@ public class ToDo extends Task {
     @Override
     public String toSaveString() {
         int status = super.getIsDone() ? 1 : 0;
-        return String.format("T *|* %d *|* %s", status, super.getTaskDescription());
+        return String.format("T @@@ %d @@@ %s", status, super.getTaskDescription());
     }
 }
