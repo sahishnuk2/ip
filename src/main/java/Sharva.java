@@ -272,22 +272,43 @@ public class Sharva {
         try (Scanner scanner = new Scanner(sharva)) {
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(" @@@ ");
-                Task task;
-                if (parts[0].equals("T")) {
-                    task = new ToDo(parts[2]);
-                } else if (parts[0].equals("D")) {
-                    task = new Deadline(parts[2], parts[3]);
-                } else {
-                    task = new Event(parts[2], parts[3], parts[4]);
-                }
-                if (parts[1].equals("1")) {
-                    try {
-                        task.markAsDone();
-                    } catch (SharvaException e) {
-                        System.out.println("marking a marked task, by right this shldnt happen");
+
+                try {
+                    Task task;
+                    if (parts[0].equals("T")) {
+                        if (parts.length != 3) {
+                            throw new IllegalArgumentException("Skipping todo task (invalid format)");
+                        }
+                        task = new ToDo(parts[2]);
+                    } else if (parts[0].equals("D")) {
+                        if (parts.length != 4) {
+                            throw new IllegalArgumentException("Skipping deadline task (invalid format)");
+                        }
+                        task = new Deadline(parts[2], parts[3]);
+                    } else if (parts[0].equals("E")) {
+                        if (parts.length != 5) {
+                            throw new IllegalArgumentException("Skipping event task (invalid format)");
+                        }
+                        task = new Event(parts[2], parts[3], parts[4]);
+                    } else {
+                        throw new IllegalArgumentException("Skipping task (invalid task type)");
                     }
+
+                    if (parts[1].equals("1")) {
+                        try {
+                            task.markAsDone();
+                        } catch (SharvaException e) {
+                            System.out.println("marking a marked task, by right this shldnt happen");
+                        }
+                    } else if (!parts[1].equals("0")) {
+                        throw new IllegalArgumentException("Skipping task (invalid task status)");
+                    }
+                    tasks.add(task);
+                } catch (IllegalArgumentException ie) {
+                    System.out.println(horizontalLine);
+                    System.out.println("    " + ie.getMessage());
+                    System.out.println(horizontalLine);
                 }
-                tasks.add(task);
             }
         } catch (IOException e) {
             System.out.println("problem!");
