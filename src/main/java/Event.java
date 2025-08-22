@@ -12,4 +12,10 @@ public class Event extends Task {
     public String toString() {
         return String.format("[E]%s (from: %s to: %s)", super.toString(), this.from, this.to);
     }
+
+    @Override
+    public String toSaveString() {
+        int status = super.getIsDone() ? 1 : 0;
+        return String.format("E *|* %d *|* %s *|* %s *|* %s", status, super.getTaskDescription(), this.from, this.to);
+    }
 }

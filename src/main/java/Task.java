@@ -21,9 +21,19 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    public boolean getIsDone() {
+        return this.isDone;
+    }
+
+    public String getTaskDescription() {
+        return this.description;
+    }
+
     @Override
     public String toString() {
         String status = isDone ? "[X] " : "[ ] ";
         return status + this.description;
     }
+
+    public abstract String toSaveString();
 }
