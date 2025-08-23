@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,13 +14,20 @@ import java.util.Scanner;
 public class Sharva {
     private static final String horizontalLine = "    _____________________________________________";
     private static final List<Task> tasks = new ArrayList<>();
-    private static final List<DateTimeFormatter> formatters = List.of (
+    private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yy"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("dd/M/yyyy"),
             DateTimeFormatter.ofPattern("dd/M/yy")
+    );
+
+    private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
+            DateTimeFormatter.ofPattern("hhmm"),
+            DateTimeFormatter.ofPattern("hh:mm"),
+            DateTimeFormatter.ofPattern("h:mm a"),
+            DateTimeFormatter.ofPattern("h.mm a")
     );
 
     public static void sayHello() {
@@ -56,7 +64,18 @@ public class Sharva {
         if (by.isEmpty()) {
             throw new InvalidArgumentsException("When is it due?");
         }
-        addDeadline(taskName, by);
+        String[] parts = by.split(" ");
+        if (parts.length == 1) {
+            LocalDate due = parseDate(parts[0]);
+            addDeadline(taskName, LocalDateTime.of(due, LocalTime.of(23, 59)));
+        } else if (parts.length == 2 ) {
+
+        } else if (parts.length == 3) {
+
+        } else {
+            throw new InvalidArgumentsException("Invalid date and time format");
+        }
+
     }
 
     public static void event(String input) throws SharvaException {
@@ -239,9 +258,9 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    // Helper method to parse LocalDate
+    // Helper method to parse LocalDate, LocalTime
     private static LocalDate parseDate(String date) throws SharvaException {
-        for (DateTimeFormatter formatter : formatters) {
+        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
             try {
                 return LocalDate.parse(date, formatter);
             } catch (DateTimeParseException e) {
@@ -251,6 +270,17 @@ public class Sharva {
 
         // If not successful
         throw new InvalidArgumentsException("Date format is incorrect");
+    }
+
+    private static LocalTime parseTime(String time) throws SharvaException {
+        for (DateTimeFormatter formatter : TIME_FORMATTERS) {
+            try {
+                return LocalTime.parse(time);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+        throw new InvalidArgumentsException("Time format is incorrect");
     }
 
     public static void save() {
