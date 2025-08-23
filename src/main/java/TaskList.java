@@ -40,12 +40,12 @@ public class TaskList {
         message.deleteTask(task, tasks.size());
     }
 
-    public String list() {
+    public void list() {
         StringBuilder result = new StringBuilder("    Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             result.append("\n").append(String.format("    %d. %s", i + 1, tasks.get(i).toString()));
         }
-        return result.toString();
+        message.echo(result.toString());
     }
 
     public List<Task> getTasks() {

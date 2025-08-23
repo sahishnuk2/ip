@@ -7,9 +7,11 @@ import java.util.Scanner;
 
 public class Storage {
     private final String filePath;
+    private final Message message;
 
-    public Storage(String filePath) {
+    public Storage(String filePath, Message message) {
         this.filePath = filePath;
+        this.message = message;
     }
 
     public List<Task> load() {
@@ -41,30 +43,24 @@ public class Storage {
                         if (parts.length != 4) {
                             throw new InvalidArgumentsException("Skipping deadline task (invalid format)");
                         }
-                        task = new Deadline(parts[2], Sharva.parseDateTime(parts[3], true));
+                        task = new Deadline(parts[2], Parser.parseDateTime(parts[3], true));
                     } else if (parts[0].equals("E")) {
                         if (parts.length != 5) {
                             throw new InvalidArgumentsException("Skipping event task (invalid format)");
                         }
-                        task = new Event(parts[2], Sharva.parseDateTime(parts[3], false), Sharva.parseDateTime(parts[4], true));
+                        task = new Event(parts[2], Parser.parseDateTime(parts[3], false), Parser.parseDateTime(parts[4], true));
                     } else {
                         throw new InvalidArgumentsException("Skipping task (invalid task type)");
                     }
 
                     if (parts[1].equals("1")) {
-                        try {
-                            task.markAsDone();
-                        } catch (SharvaException e) {
-                            System.out.println("marking a marked task, by right this shldnt happen");
-                        }
+                        task.markAsDone();
                     } else if (!parts[1].equals("0")) {
                         throw new InvalidArgumentsException("Skipping task (invalid task status)");
                     }
                     tasks.add(task);
                 } catch (SharvaException ie) {
-                    System.out.println(Sharva.horizontalLine);
-                    System.out.println("    " + ie.getMessage());
-                    System.out.println(Sharva.horizontalLine);
+                    message.echo("    " + ie.getMessage());
                 }
             }
         } catch (IOException e) {

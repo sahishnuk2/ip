@@ -42,4 +42,10 @@ public class Message {
         System.out.println(String.format("    Now You have %d task(s) in the list", numberOfTasks));
         System.out.println(HORIZONTAL_LINE);
     }
+
+    public void echo(String input) {
+        System.out.println(HORIZONTAL_LINE);
+        System.out.println(input);
+        System.out.println(HORIZONTAL_LINE);
+    }
 }
