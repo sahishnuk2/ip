@@ -2,6 +2,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,6 +13,14 @@ import java.util.Scanner;
 public class Sharva {
     private static final String horizontalLine = "    _____________________________________________";
     private static final List<Task> tasks = new ArrayList<>();
+    private static final List<DateTimeFormatter> formatters = List.of (
+            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+            DateTimeFormatter.ofPattern("dd-M-yyyy"),
+            DateTimeFormatter.ofPattern("dd-M-yy"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("dd/M/yyyy"),
+            DateTimeFormatter.ofPattern("dd/M/yy")
+    );
 
     public static void sayHello() {
         System.out.println(horizontalLine);
@@ -196,7 +208,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void addDeadline(String taskName, String by) {
+    private static void addDeadline(String taskName, LocalDateTime by) {
         System.out.println(horizontalLine);
         Task task = new Deadline(taskName, by);
         tasks.add(task);
@@ -206,7 +218,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void addEvent(String taskName, String from, String to) {
+    private static void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
         System.out.println(horizontalLine);
         Task task = new Event(taskName, from, to);
         tasks.add(task);
@@ -227,6 +239,19 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    // Helper method to parse LocalDate
+    private static LocalDate parseDate(String date) throws SharvaException {
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDate.parse(date, formatter);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+
+        // If not successful
+        throw new InvalidArgumentsException("Date format is incorrect");
+    }
 
     public static void save() {
         StringBuilder sb = new StringBuilder();
