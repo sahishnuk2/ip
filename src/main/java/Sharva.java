@@ -2,13 +2,41 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Sharva {
-    private static final String horizontalLine = "    _____________________________________________";
+    private static final String horizontalLine = "    __________________________________________________________________";
     private static final List<Task> tasks = new ArrayList<>();
+    private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
+            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+            DateTimeFormatter.ofPattern("d-M-yyyy"),
+            DateTimeFormatter.ofPattern("dd-M-yyyy"),
+            DateTimeFormatter.ofPattern("dd-M-yy"),
+            DateTimeFormatter.ofPattern("d-M-yy"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("dd/M/yyyy"),
+            DateTimeFormatter.ofPattern("d/M/yyyy"),
+            DateTimeFormatter.ofPattern("dd/M/yy"),
+            DateTimeFormatter.ofPattern("d/M/yy"),
+            DateTimeFormatter.ofPattern("ddMMyyyy"),
+            DateTimeFormatter.ofPattern("ddMMyy")
+    );
+
+    private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
+            DateTimeFormatter.ofPattern("HHmm"),
+            DateTimeFormatter.ofPattern("HH:mm"),
+            DateTimeFormatter.ofPattern("h:mm a"),
+            DateTimeFormatter.ofPattern("h.mm a"),
+            DateTimeFormatter.ofPattern("h:mma"),
+            DateTimeFormatter.ofPattern("h.mma")
+    );
 
     public static void sayHello() {
         System.out.println(horizontalLine);
@@ -44,7 +72,8 @@ public class Sharva {
         if (by.isEmpty()) {
             throw new InvalidArgumentsException("When is it due?");
         }
-        addDeadline(taskName, by);
+        LocalDateTime due = parseDateTime(by, true);
+        addDeadline(taskName, due);
     }
 
     public static void event(String input) throws SharvaException {
@@ -71,13 +100,18 @@ public class Sharva {
         if (from.isEmpty()) {
             throw new InvalidArgumentsException("When does the event start?");
         }
+        LocalDateTime fromDateTime = parseDateTime(from, false);
+
         String to = input.substring(toIndex + 5).trim();
         if (to.isEmpty()) {
             throw new InvalidArgumentsException("When does the event end?");
         }
-        addEvent(taskName, from, to);
+        LocalDateTime toDateTime = parseDateTime(to, true);
+        if (toDateTime.isBefore(fromDateTime)) {
+            throw new InvalidArgumentsException("Trying time travel? We do no do that here...");
+        }
+        addEvent(taskName, fromDateTime, toDateTime);
     }
-
 
     // Marking tasks
     public static void mark(String input) throws SharvaException {
@@ -196,7 +230,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void addDeadline(String taskName, String by) {
+    private static void addDeadline(String taskName, LocalDateTime by) {
         System.out.println(horizontalLine);
         Task task = new Deadline(taskName, by);
         tasks.add(task);
@@ -206,7 +240,7 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
-    private static void addEvent(String taskName, String from, String to) {
+    private static void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
         System.out.println(horizontalLine);
         Task task = new Event(taskName, from, to);
         tasks.add(task);
@@ -227,6 +261,53 @@ public class Sharva {
         System.out.println(horizontalLine);
     }
 
+    // Helper method to parse LocalDate, LocalTime
+    private static LocalDate parseDate(String date) throws SharvaException {
+        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
+            try {
+                return LocalDate.parse(date, formatter);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+
+        // If not successful
+        throw new InvalidArgumentsException("Date format is incorrect");
+    }
+
+    private static LocalTime parseTime(String time) throws SharvaException {
+        for (DateTimeFormatter formatter : TIME_FORMATTERS) {
+            try {
+                return LocalTime.parse(time.toLowerCase(), formatter);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+        throw new InvalidArgumentsException("Time format is incorrect");
+    }
+
+    private static LocalDateTime parseDateTime(String input, boolean isEnd) throws SharvaException {
+        String[] parts = input.split(" ");
+        LocalDate date;
+        LocalTime time = null;
+        if (parts.length == 1) {
+            date = parseDate(parts[0]);
+        } else if (parts.length == 2 ) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1]);
+        } else if (parts.length == 3) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1] + " " + parts[2]);
+        } else {
+            throw new InvalidArgumentsException("Invalid date and time format");
+        }
+        if (time == null && isEnd) {
+            return LocalDateTime.of(date, LocalTime.of(23, 59));
+        } else if (time == null) {
+            return LocalDateTime.of(date, LocalTime.of(0, 0));
+        }
+        return LocalDateTime.of(date, time);
+    }
 
     public static void save() {
         StringBuilder sb = new StringBuilder();
@@ -277,21 +358,21 @@ public class Sharva {
                     Task task;
                     if (parts[0].equals("T")) {
                         if (parts.length != 3) {
-                            throw new IllegalArgumentException("Skipping todo task (invalid format)");
+                            throw new InvalidArgumentsException("Skipping todo task (invalid format)");
                         }
                         task = new ToDo(parts[2]);
                     } else if (parts[0].equals("D")) {
                         if (parts.length != 4) {
-                            throw new IllegalArgumentException("Skipping deadline task (invalid format)");
+                            throw new InvalidArgumentsException("Skipping deadline task (invalid format)");
                         }
-                        task = new Deadline(parts[2], parts[3]);
+                        task = new Deadline(parts[2], parseDateTime(parts[3], true));
                     } else if (parts[0].equals("E")) {
                         if (parts.length != 5) {
-                            throw new IllegalArgumentException("Skipping event task (invalid format)");
+                            throw new InvalidArgumentsException("Skipping event task (invalid format)");
                         }
-                        task = new Event(parts[2], parts[3], parts[4]);
+                        task = new Event(parts[2], parseDateTime(parts[3], false), parseDateTime(parts[4], true));
                     } else {
-                        throw new IllegalArgumentException("Skipping task (invalid task type)");
+                        throw new InvalidArgumentsException("Skipping task (invalid task type)");
                     }
 
                     if (parts[1].equals("1")) {
@@ -301,10 +382,10 @@ public class Sharva {
                             System.out.println("marking a marked task, by right this shldnt happen");
                         }
                     } else if (!parts[1].equals("0")) {
-                        throw new IllegalArgumentException("Skipping task (invalid task status)");
+                        throw new InvalidArgumentsException("Skipping task (invalid task status)");
                     }
                     tasks.add(task);
-                } catch (IllegalArgumentException ie) {
+                } catch (SharvaException ie) {
                     System.out.println(horizontalLine);
                     System.out.println("    " + ie.getMessage());
                     System.out.println(horizontalLine);
