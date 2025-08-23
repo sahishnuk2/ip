@@ -84,13 +84,13 @@ public class Storage {
             fileWriter = new FileWriter(filePath, false);
             fileWriter.write(allTasks);
         } catch (IOException e) {
-            System.out.println("open error");
+            message.echo("    open error");
         } finally {
             if (fileWriter != null) {
                 try {
                     fileWriter.close();
                 } catch (IOException e) {
-                    System.out.println("close error");
+                    message.echo("    close error");
                 }
             }
         }
