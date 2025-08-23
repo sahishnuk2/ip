@@ -23,7 +23,7 @@ public class Storage {
             try {
                 sharva.createNewFile();
             } catch (IOException e) {
-                System.out.println("error in creating file");
+                message.echo("    error in creating file");
                 return new ArrayList<Task>();
             }
         }
@@ -64,7 +64,7 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            System.out.println("problem!");
+            message.echo("    problem!");
         }
         return tasks;
     }
