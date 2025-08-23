@@ -69,9 +69,13 @@ public class Sharva {
             LocalDate due = parseDate(parts[0]);
             addDeadline(taskName, LocalDateTime.of(due, LocalTime.of(23, 59)));
         } else if (parts.length == 2 ) {
-
+            LocalDate due = parseDate(parts[0]);
+            LocalTime dueTime = parseTime(parts[1]);
+            addDeadline(taskName, LocalDateTime.of(due, dueTime));
         } else if (parts.length == 3) {
-
+            LocalDate due = parseDate(parts[0]);
+            LocalTime dueTime = parseTime(parts[1] + " " + parts[2]);
+            addDeadline(taskName, LocalDateTime.of(due, dueTime));
         } else {
             throw new InvalidArgumentsException("Invalid date and time format");
         }
@@ -371,7 +375,7 @@ public class Sharva {
     }
 
     public static void main(String[] args) {
-        load();
+        //load();
         sayHello();
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
@@ -394,7 +398,7 @@ public class Sharva {
                 } else {
                     handleInvalidInput(curr);
                 }
-                save();
+                //save();
             } catch (SharvaException e) {
                 System.out.println(horizontalLine);
                 System.out.println("    " + e.getMessage());
