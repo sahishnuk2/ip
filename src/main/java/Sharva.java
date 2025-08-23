@@ -12,15 +12,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Sharva {
-    private static final String horizontalLine = "    _____________________________________________";
+    private static final String horizontalLine = "    __________________________________________________________________";
     private static final List<Task> tasks = new ArrayList<>();
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+            DateTimeFormatter.ofPattern("d-M-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yy"),
+            DateTimeFormatter.ofPattern("d-M-yy"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("dd/M/yyyy"),
-            DateTimeFormatter.ofPattern("dd/M/yy")
+            DateTimeFormatter.ofPattern("d/M/yyyy"),
+            DateTimeFormatter.ofPattern("dd/M/yy"),
+            DateTimeFormatter.ofPattern("d/M/yy"),
+            DateTimeFormatter.ofPattern("ddMMyyyy"),
+            DateTimeFormatter.ofPattern("ddMMyy")
     );
 
     private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
