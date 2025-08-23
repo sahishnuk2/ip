@@ -2,13 +2,13 @@ todo
 todofish
 todobuymilk
 deadline
-deadline /by tmr
-deadline tn /by tmr
-deadline tn/by tmr
+deadline /by 12/2/2025
+deadline tn /by 12/2/2025 9.00 am
+deadline tn/by 12022025
 event
 event /from /to
 event /from now /to tmr
-event tn /from now /to tmr
+event tn /from 12022025 /to 12022025
 event tn/from now /to tmr
 event tn /from now/to tmr
 event tn /from now /totmr
