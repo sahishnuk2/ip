@@ -24,8 +24,8 @@ public class Sharva {
     );
 
     private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
-            DateTimeFormatter.ofPattern("hhmm"),
-            DateTimeFormatter.ofPattern("hh:mm"),
+            DateTimeFormatter.ofPattern("HHmm"),
+            DateTimeFormatter.ofPattern("HH:mm"),
             DateTimeFormatter.ofPattern("h:mm a"),
             DateTimeFormatter.ofPattern("h.mm a")
     );
@@ -64,22 +64,8 @@ public class Sharva {
         if (by.isEmpty()) {
             throw new InvalidArgumentsException("When is it due?");
         }
-        String[] parts = by.split(" ");
-        if (parts.length == 1) {
-            LocalDate due = parseDate(parts[0]);
-            addDeadline(taskName, LocalDateTime.of(due, LocalTime.of(23, 59)));
-        } else if (parts.length == 2 ) {
-            LocalDate due = parseDate(parts[0]);
-            LocalTime dueTime = parseTime(parts[1]);
-            addDeadline(taskName, LocalDateTime.of(due, dueTime));
-        } else if (parts.length == 3) {
-            LocalDate due = parseDate(parts[0]);
-            LocalTime dueTime = parseTime(parts[1] + " " + parts[2]);
-            addDeadline(taskName, LocalDateTime.of(due, dueTime));
-        } else {
-            throw new InvalidArgumentsException("Invalid date and time format");
-        }
-
+        LocalDateTime due = parseDateTime(by);
+        addDeadline(taskName, due);
     }
 
     public static void event(String input) throws SharvaException {
@@ -106,13 +92,15 @@ public class Sharva {
         if (from.isEmpty()) {
             throw new InvalidArgumentsException("When does the event start?");
         }
+        LocalDateTime fromDateTime = parseDateTime(from);
+
         String to = input.substring(toIndex + 5).trim();
         if (to.isEmpty()) {
             throw new InvalidArgumentsException("When does the event end?");
         }
-        addEvent(taskName, from, to);
+        LocalDateTime toDateTime = parseDateTime(to);
+        addEvent(taskName, fromDateTime, toDateTime);
     }
-
 
     // Marking tasks
     public static void mark(String input) throws SharvaException {
@@ -279,7 +267,7 @@ public class Sharva {
     private static LocalTime parseTime(String time) throws SharvaException {
         for (DateTimeFormatter formatter : TIME_FORMATTERS) {
             try {
-                return LocalTime.parse(time);
+                return LocalTime.parse(time, formatter);
             } catch (DateTimeParseException e) {
                 // Try next formatter
             }
@@ -287,92 +275,113 @@ public class Sharva {
         throw new InvalidArgumentsException("Time format is incorrect");
     }
 
-    public static void save() {
-        StringBuilder sb = new StringBuilder();
-        for (Task task : tasks) {
-            sb.append(task.toSaveString()).append("\n");
+    private static LocalDateTime parseDateTime(String input) throws SharvaException {
+        String[] parts = input.split(" ");
+        LocalDate date;
+        LocalTime time = null;
+        if (parts.length == 1) {
+            date = parseDate(parts[0]);
+        } else if (parts.length == 2 ) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1]);
+        } else if (parts.length == 3) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1] + " " + parts[2]);
+        } else {
+            throw new InvalidArgumentsException("Invalid date and time format");
         }
-        String allTasks = sb.toString();
-        saveTasks("./data/sharva.txt", allTasks);
-
+        if (time == null) {
+            return LocalDateTime.of(date, LocalTime.of(0, 0));
+        }
+        return LocalDateTime.of(date, time);
     }
 
-    private static void saveTasks(String location, String allTasks) {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(location, false);
-            fileWriter.write(allTasks);
-        } catch (IOException e) {
-            System.out.println("open error");
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    System.out.println("close error");
-                }
-            }
-        }
-    }
-
-    public static void load() {
-        File sharva = new File("./data/sharva.txt");
-        sharva.getParentFile().mkdirs();
-
-        if (!sharva.exists()) {
-            try {
-                sharva.createNewFile();
-            } catch (IOException e) {
-                System.out.println("error in creating file");
-                return;
-            }
-        }
-
-        try (Scanner scanner = new Scanner(sharva)) {
-            while (scanner.hasNextLine()) {
-                String[] parts = scanner.nextLine().split(" @@@ ");
-
-                try {
-                    Task task;
-                    if (parts[0].equals("T")) {
-                        if (parts.length != 3) {
-                            throw new IllegalArgumentException("Skipping todo task (invalid format)");
-                        }
-                        task = new ToDo(parts[2]);
-                    } else if (parts[0].equals("D")) {
-                        if (parts.length != 4) {
-                            throw new IllegalArgumentException("Skipping deadline task (invalid format)");
-                        }
-                        task = new Deadline(parts[2], parts[3]);
-                    } else if (parts[0].equals("E")) {
-                        if (parts.length != 5) {
-                            throw new IllegalArgumentException("Skipping event task (invalid format)");
-                        }
-                        task = new Event(parts[2], parts[3], parts[4]);
-                    } else {
-                        throw new IllegalArgumentException("Skipping task (invalid task type)");
-                    }
-
-                    if (parts[1].equals("1")) {
-                        try {
-                            task.markAsDone();
-                        } catch (SharvaException e) {
-                            System.out.println("marking a marked task, by right this shldnt happen");
-                        }
-                    } else if (!parts[1].equals("0")) {
-                        throw new IllegalArgumentException("Skipping task (invalid task status)");
-                    }
-                    tasks.add(task);
-                } catch (IllegalArgumentException ie) {
-                    System.out.println(horizontalLine);
-                    System.out.println("    " + ie.getMessage());
-                    System.out.println(horizontalLine);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("problem!");
-        }
-    }
+//    public static void save() {
+//        StringBuilder sb = new StringBuilder();
+//        for (Task task : tasks) {
+//            sb.append(task.toSaveString()).append("\n");
+//        }
+//        String allTasks = sb.toString();
+//        saveTasks("./data/sharva.txt", allTasks);
+//
+//    }
+//
+//    private static void saveTasks(String location, String allTasks) {
+//        FileWriter fileWriter = null;
+//        try {
+//            fileWriter = new FileWriter(location, false);
+//            fileWriter.write(allTasks);
+//        } catch (IOException e) {
+//            System.out.println("open error");
+//        } finally {
+//            if (fileWriter != null) {
+//                try {
+//                    fileWriter.close();
+//                } catch (IOException e) {
+//                    System.out.println("close error");
+//                }
+//            }
+//        }
+//    }
+//
+//    public static void load() {
+//        File sharva = new File("./data/sharva.txt");
+//        sharva.getParentFile().mkdirs();
+//
+//        if (!sharva.exists()) {
+//            try {
+//                sharva.createNewFile();
+//            } catch (IOException e) {
+//                System.out.println("error in creating file");
+//                return;
+//            }
+//        }
+//
+//        try (Scanner scanner = new Scanner(sharva)) {
+//            while (scanner.hasNextLine()) {
+//                String[] parts = scanner.nextLine().split(" @@@ ");
+//
+//                try {
+//                    Task task;
+//                    if (parts[0].equals("T")) {
+//                        if (parts.length != 3) {
+//                            throw new IllegalArgumentException("Skipping todo task (invalid format)");
+//                        }
+//                        task = new ToDo(parts[2]);
+//                    } else if (parts[0].equals("D")) {
+//                        if (parts.length != 4) {
+//                            throw new IllegalArgumentException("Skipping deadline task (invalid format)");
+//                        }
+//                        task = new Deadline(parts[2], parts[3]);
+//                    } else if (parts[0].equals("E")) {
+//                        if (parts.length != 5) {
+//                            throw new IllegalArgumentException("Skipping event task (invalid format)");
+//                        }
+//                        task = new Event(parts[2], parts[3], parts[4]);
+//                    } else {
+//                        throw new IllegalArgumentException("Skipping task (invalid task type)");
+//                    }
+//
+//                    if (parts[1].equals("1")) {
+//                        try {
+//                            task.markAsDone();
+//                        } catch (SharvaException e) {
+//                            System.out.println("marking a marked task, by right this shldnt happen");
+//                        }
+//                    } else if (!parts[1].equals("0")) {
+//                        throw new IllegalArgumentException("Skipping task (invalid task status)");
+//                    }
+//                    tasks.add(task);
+//                } catch (IllegalArgumentException ie) {
+//                    System.out.println(horizontalLine);
+//                    System.out.println("    " + ie.getMessage());
+//                    System.out.println(horizontalLine);
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("problem!");
+//        }
+//    }
 
     public static void main(String[] args) {
         //load();
