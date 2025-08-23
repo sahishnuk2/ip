@@ -294,7 +294,7 @@ public class Sharva {
         }
         if (time == null && isEnd) {
             return LocalDateTime.of(date, LocalTime.of(23, 59));
-        } else if (!isEnd) {
+        } else if (time == null) {
             return LocalDateTime.of(date, LocalTime.of(0, 0));
         }
         return LocalDateTime.of(date, time);
