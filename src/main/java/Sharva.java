@@ -14,6 +14,7 @@ import java.util.Scanner;
 public class Sharva {
     private Storage storage;
     private TaskList tasks;
+    private Message message;
     public static final String horizontalLine = "    __________________________________________________________________";
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
@@ -41,13 +42,8 @@ public class Sharva {
 
     public Sharva(String filePath) {
         this.storage = new Storage(filePath);
-        this.tasks = new TaskList(storage.load());
-    }
-
-    public void sayHello() {
-        System.out.println(horizontalLine);
-        System.out.println("    Hello! I'm Sharva\n    What can I do for you?");
-        System.out.println(horizontalLine);
+        this.message = new Message();
+        this.tasks = new TaskList(storage.load(), message);
     }
 
     // Parser functions
@@ -191,29 +187,6 @@ public class Sharva {
         throw new InvalidCommandException();
     }
 
-    public void sayBye() {
-        System.out.println(horizontalLine);
-        System.out.println("    Bye bro! See you later!");
-        System.out.println(horizontalLine);
-    }
-
-    //Helper methods for marking
-//    private void markTask(int index) throws SharvaException {
-//        tasks.get(index).markAsDone();
-//        System.out.println(horizontalLine);
-//        System.out.println("    Nice! I've marked this task as done:");
-//        System.out.println("    " + tasks.get(index));
-//        System.out.println(horizontalLine);
-//    }
-
-//    private void unmarkTask(int index) throws SharvaException {
-//        tasks.get(index).undoTask();
-//        System.out.println(horizontalLine);
-//        System.out.println("    OK, I've marked this task as not done yet:");
-//        System.out.println("    " + tasks.get(index));
-//        System.out.println(horizontalLine);
-//    }
-
     // Helper methods to add tasks
     private void addTodo(String taskName) {
         System.out.println(horizontalLine);
@@ -304,31 +277,30 @@ public class Sharva {
         return LocalDateTime.of(date, time);
     }
 
-    public static void main(String[] args) {
-        Sharva sharva = new Sharva("./data/sharva.txt");
-        sharva.sayHello();
+    public void run() {
+        message.sayHello();
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
         while (!curr.equals("bye")) {
             try {
                 if (curr.equals("list")) {
-                    sharva.list();
+                    list();
                 } else if (curr.startsWith("mark")) {
-                    sharva.mark(curr);
+                    mark(curr);
                 } else if (curr.startsWith("unmark")) {
-                    sharva.unmark(curr);
+                    unmark(curr);
                 } else if (curr.startsWith("delete")) {
-                    sharva.delete(curr);
+                    delete(curr);
                 } else if (curr.startsWith("todo ")) {
-                    sharva.toDo(curr);
+                    toDo(curr);
                 } else if (curr.startsWith("deadline ")) {
-                    sharva.deadline(curr);
+                    deadline(curr);
                 } else if (curr.startsWith("event ")){
-                    sharva.event(curr);
+                    event(curr);
                 } else {
-                    sharva.handleInvalidInput(curr);
+                    handleInvalidInput(curr);
                 }
-                sharva.storage.save(sharva.tasks.getTasks());
+                storage.save(tasks.getTasks());
             } catch (SharvaException e) {
                 System.out.println(horizontalLine);
                 System.out.println("    " + e.getMessage());
@@ -336,7 +308,12 @@ public class Sharva {
             }
             curr = scanner.nextLine();
         }
-        sharva.sayBye();
+        message.sayBye();
         scanner.close();
+    }
+
+    public static void main(String[] args) {
+        Sharva sharva = new Sharva("./data/sharva.txt");
+        sharva.run();
     }
 }
