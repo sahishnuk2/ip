@@ -189,33 +189,18 @@ public class Sharva {
 
     // Helper methods to add tasks
     private void addTodo(String taskName) {
-        System.out.println(horizontalLine);
         Task task = new ToDo(taskName);
         tasks.addTask(task);
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        //System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
-        System.out.println(horizontalLine);
     }
 
     private void addDeadline(String taskName, LocalDateTime by) {
-        System.out.println(horizontalLine);
         Task task = new Deadline(taskName, by);
         tasks.addTask(task);
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        //System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
-        System.out.println(horizontalLine);
     }
 
     private void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
-        System.out.println(horizontalLine);
         Task task = new Event(taskName, from, to);
         tasks.addTask(task);
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        //System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
-        System.out.println(horizontalLine);
     }
 
     // Helper method to delete tasks

@@ -26,4 +26,12 @@ public class Message {
         System.out.println("    " + task);
         System.out.println(HORIZONTAL_LINE);
     }
+
+    public void addTask(Task task, int numberOfTasks) {
+        System.out.println(HORIZONTAL_LINE);
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("    " + task);
+        System.out.println(String.format("    Now You have %d task(s) in the list", numberOfTasks));
+        System.out.println(HORIZONTAL_LINE);
+    }
 }

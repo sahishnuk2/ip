@@ -28,6 +28,7 @@ public class TaskList {
 
     public void addTask(Task task) {
         tasks.add(task);
+        message.addTask(task, tasks.size());
     }
 
     public void delete(int index) throws SharvaException {
