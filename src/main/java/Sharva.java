@@ -107,6 +107,9 @@ public class Sharva {
             throw new InvalidArgumentsException("When does the event end?");
         }
         LocalDateTime toDateTime = parseDateTime(to, true);
+        if (toDateTime.isBefore(fromDateTime)) {
+            throw new InvalidArgumentsException("Trying time travel? We do no do that here...");
+        }
         addEvent(taskName, fromDateTime, toDateTime);
     }
 
