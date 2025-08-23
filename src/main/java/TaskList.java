@@ -26,15 +26,22 @@ public class TaskList {
         tasks.add(task);
     }
 
-    public void delete(int index) {
+    public void delete(int index) throws SharvaException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new InvalidIndexException();
+        }
         tasks.remove(index);
     }
 
     public String list() {
-        StringBuilder result = new StringBuilder("Here are the tasks in your list:");
+        StringBuilder result = new StringBuilder("    Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            result.append("\n").append(String.format("%d. %s", i + 1, tasks.get(i).toString()));
+            result.append("\n").append(String.format("    %d. %s", i + 1, tasks.get(i).toString()));
         }
         return result.toString();
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 }
