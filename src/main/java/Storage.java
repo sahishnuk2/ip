@@ -14,7 +14,7 @@ public class Storage {
 
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
-        File sharva = new File("./data/sharva.txt");
+        File sharva = new File(filePath);
         sharva.getParentFile().mkdirs();
 
         if (!sharva.exists()) {

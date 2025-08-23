@@ -312,13 +312,14 @@ public class Sharva {
     public static void main(String[] args) {
         Storage storage = new Storage("./data/sharva.txt");
         tasks.addAll(storage.load());
+        TaskList taskList = new TaskList(storage.load());
         sayHello();
         Scanner scanner = new Scanner(System.in);
         String curr = scanner.nextLine();
         while (!curr.equals("bye")) {
             try {
                 if (curr.equals("list")) {
-                    list();
+                    System.out.println(taskList.list());
                 } else if (curr.startsWith("mark")) {
                     mark(curr);
                 } else if (curr.startsWith("unmark")) {
