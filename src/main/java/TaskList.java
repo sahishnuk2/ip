@@ -35,7 +35,9 @@ public class TaskList {
         if (index < 0 || index >= tasks.size()) {
             throw new InvalidIndexException();
         }
+        Task task = tasks.get(index);
         tasks.remove(index);
+        message.deleteTask(task, tasks.size());
     }
 
     public String list() {

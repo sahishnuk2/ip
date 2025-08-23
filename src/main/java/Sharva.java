@@ -115,6 +115,22 @@ public class Sharva {
         addEvent(taskName, fromDateTime, toDateTime);
     }
 
+    // Helper methods to add tasks
+    private void addTodo(String taskName) {
+        Task task = new ToDo(taskName);
+        tasks.addTask(task);
+    }
+
+    private void addDeadline(String taskName, LocalDateTime by) {
+        Task task = new Deadline(taskName, by);
+        tasks.addTask(task);
+    }
+
+    private void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
+        Task task = new Event(taskName, from, to);
+        tasks.addTask(task);
+    }
+
     // Marking tasks
     public void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
@@ -171,7 +187,6 @@ public class Sharva {
         }
         int taskNumber = Integer.parseInt(strs[1]);
         tasks.delete(taskNumber - 1);
-        System.out.println("may or may not be deleted");
     }
 
     public void list() {
@@ -187,32 +202,6 @@ public class Sharva {
         throw new InvalidCommandException();
     }
 
-    // Helper methods to add tasks
-    private void addTodo(String taskName) {
-        Task task = new ToDo(taskName);
-        tasks.addTask(task);
-    }
-
-    private void addDeadline(String taskName, LocalDateTime by) {
-        Task task = new Deadline(taskName, by);
-        tasks.addTask(task);
-    }
-
-    private void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
-        Task task = new Event(taskName, from, to);
-        tasks.addTask(task);
-    }
-
-    // Helper method to delete tasks
-//    private void deleteTask(int index) {
-//        Task task = tasks.get(index);
-//        tasks.remove(index);
-//        System.out.println(horizontalLine);
-//        System.out.println("    Noted. I've removed this task:");
-//        System.out.println("    " + task);
-//        System.out.println(String.format("    Now You have %d task(s) in the list", tasks.size()));
-//        System.out.println(horizontalLine);
-//    }
 
     // Helper method to parse LocalDate, LocalTime
     public static LocalDate parseDate(String date) throws SharvaException {
