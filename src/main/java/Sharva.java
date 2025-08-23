@@ -309,34 +309,6 @@ public class Sharva {
         return LocalDateTime.of(date, time);
     }
 
-    public static void save() {
-        StringBuilder sb = new StringBuilder();
-        for (Task task : tasks) {
-            sb.append(task.toSaveString()).append("\n");
-        }
-        String allTasks = sb.toString();
-        saveTasks("./data/sharva.txt", allTasks);
-
-    }
-
-    private static void saveTasks(String location, String allTasks) {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(location, false);
-            fileWriter.write(allTasks);
-        } catch (IOException e) {
-            System.out.println("open error");
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.close();
-                } catch (IOException e) {
-                    System.out.println("close error");
-                }
-            }
-        }
-    }
-
     public static void main(String[] args) {
         Storage storage = new Storage("./data/sharva.txt");
         tasks.addAll(storage.load());
@@ -362,7 +334,7 @@ public class Sharva {
                 } else {
                     handleInvalidInput(curr);
                 }
-                save();
+                Storage.save(tasks);
             } catch (SharvaException e) {
                 System.out.println(horizontalLine);
                 System.out.println("    " + e.getMessage());
