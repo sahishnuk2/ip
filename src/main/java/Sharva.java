@@ -334,7 +334,7 @@ public class Sharva {
                 } else {
                     handleInvalidInput(curr);
                 }
-                Storage.save(tasks);
+                storage.save(tasks);
             } catch (SharvaException e) {
                 System.out.println(horizontalLine);
                 System.out.println("    " + e.getMessage());

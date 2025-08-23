@@ -12,7 +12,7 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public static List<Task> load() {
+    public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
         File sharva = new File("./data/sharva.txt");
         sharva.getParentFile().mkdirs();
@@ -73,7 +73,7 @@ public class Storage {
         return tasks;
     }
 
-    public static void save(List<Task> tasks) {
+    public void save(List<Task> tasks) {
         StringBuilder sb = new StringBuilder();
         for (Task task : tasks) {
             sb.append(task.toSaveString()).append("\n");
@@ -82,7 +82,7 @@ public class Storage {
         saveTasks("./data/sharva.txt", allTasks);
     }
 
-    private static void saveTasks(String filePath, String allTasks) {
+    private void saveTasks(String filePath, String allTasks) {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(filePath, false);
