@@ -1,4 +1,4 @@
-package sharva;
+package sharva.exceptions;
 
 public class StorageException extends SharvaException {
 

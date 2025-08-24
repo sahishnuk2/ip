@@ -1,4 +1,4 @@
-package sharva;
+package sharva.tasks;
 
 public class ToDo extends Task {
 

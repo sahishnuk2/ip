@@ -1,4 +1,4 @@
-package sharva;
+package sharva.exceptions;
 
 public class InvalidIndexException extends SharvaException {
     public InvalidIndexException() {

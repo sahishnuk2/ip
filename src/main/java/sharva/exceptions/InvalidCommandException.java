@@ -1,4 +1,4 @@
-package sharva;
+package sharva.exceptions;
 
 public class InvalidCommandException extends SharvaException {
     public InvalidCommandException() {
