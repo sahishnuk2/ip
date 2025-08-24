@@ -1,3 +1,5 @@
+package sharva;
+
 import java.util.Scanner;
 
 public class Sharva {
