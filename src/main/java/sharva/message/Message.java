@@ -7,7 +7,7 @@ public class Message {
 
     public void sayHello() {
         System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Hello! I'm sharva.Sharva\n    What can I do for you?");
+        System.out.println("    Hello! I'm Sharva\n    What can I do for you?");
         System.out.println(HORIZONTAL_LINE);
     }
 
