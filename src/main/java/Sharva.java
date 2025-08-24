@@ -2,14 +2,20 @@ import java.util.Scanner;
 
 public class Sharva {
     private final Storage storage;
-    private final TaskList tasks;
+    private TaskList tasks;
     private final Message message;
     private final Parser parser;
 
     public Sharva(String filePath) {
         this.message = new Message();
-        this.storage = new Storage(filePath, message);
-        this.tasks = new TaskList(storage.load(), message);
+        this.storage = new Storage(filePath);
+        try {
+            this.tasks = new TaskList(storage.load(), message);
+        } catch (SharvaException e) {
+            message.echo("    " + e.getMessage());
+            this.tasks = new TaskList(message);
+
+        }
         this.parser = new Parser(tasks);
     }
 

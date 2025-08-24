@@ -2,11 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskList {
-    private List<Task> tasks = new ArrayList<>();
-    private Message message;
+    private final List<Task> tasks;
+    private final Message message;
 
     public TaskList(List<Task> tasks, Message message) {
         this.tasks = tasks;
+        this.message = message;
+    }
+
+    public TaskList(Message message) {
+        this.tasks = new ArrayList<>();
         this.message = message;
     }
 
