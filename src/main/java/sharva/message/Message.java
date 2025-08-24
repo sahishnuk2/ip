@@ -1,3 +1,7 @@
+package sharva.message;
+
+import sharva.tasks.Task;
+
 public class Message {
     public static final String HORIZONTAL_LINE = "    __________________________________________________________________";
 
