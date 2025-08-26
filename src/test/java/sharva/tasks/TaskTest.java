@@ -12,9 +12,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TaskTest {
 
     @Test
-    public void toString_defaultTask_success() {
+    public void toString_defaultTask_success() throws SharvaException {
         ToDo todo = new ToDo("taskname");
         assertEquals("[T][ ] taskname", todo.toString());
+        todo.markAsDone();
+        assertEquals("[T][X] taskname", todo.toString());
 
         Deadline deadline = new Deadline("taskname", LocalDateTime.of(2025, 12, 5, 7, 19));
         assertEquals("[D][ ] taskname (by: 05/12/2025 07:19)", deadline.toString());
