@@ -23,8 +23,9 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public List<Task> load() throws SharvaException {
+    public LoadResult load() throws SharvaException {
         List<Task> tasks = new ArrayList<>();
+        List<String> corruptedTaskErrors = new ArrayList<>();
         File sharva = new File(filePath);
         sharva.getParentFile().mkdirs();
 
@@ -39,13 +40,19 @@ public class Storage {
         try (Scanner scanner = new Scanner(sharva)) {
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(" @@@ ");
-                Task task = parseTaskFromParts(parts);
-                tasks.add(task);
+                try {
+                    Task task = parseTaskFromParts(parts);
+                    tasks.add(task);
+                } catch (SharvaException e) {
+                    corruptedTaskErrors.add(e.getMessage());
+                }
+
             }
         } catch (IOException e) {
             throw new StorageException("Error loading tasks in file: " + filePath);
         }
-        return tasks;
+
+        return new LoadResult(tasks, corruptedTaskErrors);
     }
 
     public void save(List<Task> tasks) throws SharvaException {
@@ -92,5 +99,26 @@ public class Storage {
             throw new InvalidArgumentsException("Skipping task (invalid task status)");
         }
         return task;
+    }
+
+    // Inner class to encapsulate result
+    public static class LoadResult {
+        public final List<Task> tasks;
+        public String error = null;
+
+        public LoadResult(List<Task> tasks, List<String> corruptedLineErrors) {
+            this.tasks = tasks;
+            if (!corruptedLineErrors.isEmpty()) {
+                StringBuilder errors = new StringBuilder();
+                for (String str : corruptedLineErrors) {
+                    errors.append("\n").append("    ").append(str);
+                }
+                this.error = errors.toString();
+            }
+        }
+
+        public boolean hasCorruptedLines() {
+            return error != null;
+        }
     }
 }

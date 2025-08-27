@@ -18,11 +18,14 @@ public class Sharva {
         this.message = new Message();
         this.storage = new Storage(filePath);
         try {
-            this.tasks = new TaskList(storage.load(), message);
+            Storage.LoadResult result = storage.load();
+            this.tasks = new TaskList(result.tasks, message);
+            if (result.hasCorruptedLines()) {
+                message.echo("    Some tasks were removed due to file corruption: " + "    " + result.error);
+            }
         } catch (SharvaException e) {
             message.echo("    " + e.getMessage());
             this.tasks = new TaskList(message);
-
         }
         this.parser = new Parser(tasks);
     }

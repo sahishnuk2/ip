@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import sharva.exceptions.SharvaException;
-import sharva.tasks.Task;
 import sharva.tasks.ToDoStub;
 
 import java.io.ByteArrayOutputStream;
@@ -18,7 +16,7 @@ public class MessageTest {
     private Message message;
     ByteArrayOutputStream outContent;
     PrintStream originalOut = System.out;
-    Task task;
+    ToDoStub task;
 
     @BeforeEach
     public void setUp() {
@@ -55,7 +53,7 @@ public class MessageTest {
     }
 
     @Test
-    public void mark_default_success() throws SharvaException  {
+    public void mark_default_success()  {
         task.markAsDone();
         message.mark(task);
         String expected = createExpectedMessage("    Nice! I've marked this task as done:\n" + "    " + task);
@@ -63,7 +61,7 @@ public class MessageTest {
     }
 
     @Test
-    public void unmark_default_success() throws SharvaException  {
+    public void unmark_default_success()   {
         task.undoTask();
         message.unmark(task);
         String expected = createExpectedMessage("    OK, I've marked this task as not done yet:\n" + "    " + task);
@@ -73,6 +71,7 @@ public class MessageTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
     public void add_default_success(int index) {
+        outContent.reset();
         message.addTask(task, index);
         String expected = createExpectedMessage(
                 "    Got it. I've added this task:\n"+
@@ -85,6 +84,7 @@ public class MessageTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
     public void delete_default_success(int index) {
+        outContent.reset();
         message.deleteTask(task, index);
         String expected = createExpectedMessage(
                 "    Noted. I've removed this task:\n"+
@@ -97,6 +97,7 @@ public class MessageTest {
     @ParameterizedTest
     @ValueSource(strings = {"hi", "bye", "you are done with all your tasks",  "error message (good error)"})
     public void echo_default_success(String str) {
+        outContent.reset();
         message.echo(str);
         String expected = createExpectedMessage(str);
         assertEquals(expected, outContent.toString());
