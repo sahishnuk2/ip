@@ -12,6 +12,7 @@ import sharva.parser.Parser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -61,7 +62,7 @@ public class Storage {
             sb.append(task.toSaveString()).append("\n");
         }
         String allTasks = sb.toString();
-        saveTasks("./data/sharva.txt", allTasks);
+        saveTasks(filePath, allTasks);
     }
 
     private void saveTasks(String filePath, String allTasks) throws SharvaException{
@@ -87,6 +88,11 @@ public class Storage {
         } else if (parts[0].equals("E")) {
             if (parts.length != 5) {
                 throw new InvalidArgumentsException("Skipping event task (invalid format)");
+            }
+            LocalDateTime from = Parser.parseDateTime(parts[3], false);
+            LocalDateTime to = Parser.parseDateTime(parts[4], true);
+            if (to.isBefore(from)) {
+                throw new InvalidArgumentsException("Skipping task (invalid duration)");
             }
             task = new Event(parts[2], Parser.parseDateTime(parts[3], false), Parser.parseDateTime(parts[4], true));
         } else {
