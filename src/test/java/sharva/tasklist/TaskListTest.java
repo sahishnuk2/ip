@@ -135,4 +135,35 @@ public class TaskListTest {
             assertNull(messageMock.lastAction);
         }
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-2, -1, 10})  // indices outside range
+    // -2 -> refers tp -1, -1 refers to 0 and 10 refers to 11 (this is after parsing)
+    public void delete_emptyList_exceptionThrown(int index) throws SharvaException {
+        taskList.delete(0);
+        taskList.delete(0);
+        // Initially there are 2 element, I am deleting them
+        messageMock.reset();
+        try {
+            taskList.delete(index);
+            fail();
+        } catch (SharvaException e) {
+            assertEquals("Invalid task number!", e.getMessage());
+            assertNull(messageMock.lastTask);
+            assertNull(messageMock.lastAction);
+        }
+    }
+
+    // add a test for list -> should check for input string and also if last action called is echo.
+    @Test
+    public void list_default_success() {
+        StringBuilder result = new StringBuilder("    Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            result.append("\n").append(String.format("    %d. %s", i + 1, tasks.get(i).toString()));
+        }
+
+        taskList.list();
+        assertEquals(result.toString(), messageMock.lastInput);
+        assertTrue(messageMock.isEchoCalled);
+    }
 }

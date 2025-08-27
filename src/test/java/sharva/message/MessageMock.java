@@ -8,7 +8,7 @@ public class MessageMock implements MessageService {
     public String lastAction = null;  // "mark", "unmark", "add", "delete"
     public int numOfTasks = 0;        // for add/delete
     public String lastInput = null;   // for echo
-    public boolean echoCalled = false;
+    public boolean isEchoCalled = false;
 
     @Override
     public void mark(Task task) {
@@ -39,7 +39,7 @@ public class MessageMock implements MessageService {
     @Override
     public void echo(String input) {
         lastInput = input;
-        echoCalled = true;
+        isEchoCalled = true;
     }
 
     @Override
@@ -57,6 +57,6 @@ public class MessageMock implements MessageService {
         lastAction = null;
         numOfTasks = 0;
         lastInput = null;
-        echoCalled = false;
+        isEchoCalled = false;
     }
 }
