@@ -61,14 +61,14 @@ public class Parser {
             toDo(input);
         } else if (input.startsWith("deadline ")) {
             deadline(input);
-        } else if (input.startsWith("event ")){
+        } else if (input.startsWith("event ")) {
             event(input);
         } else {
             handleInvalidInput(input);
         }
     }
 
-    public void handleInvalidInput(String input) throws SharvaException {
+    private void handleInvalidInput(String input) throws SharvaException {
         if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
             throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
         }
@@ -80,7 +80,7 @@ public class Parser {
     }
 
     // Marking tasks
-    public void mark(String input) throws SharvaException {
+    private void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
             throw new InvalidArgumentsException("Which task must I mark?");
         }
@@ -100,7 +100,7 @@ public class Parser {
         tasks.mark(taskNumber - 1);
     }
 
-    public void unmark(String input) throws SharvaException {
+    private void unmark(String input) throws SharvaException {
         if (input.trim().equals("unmark")) {
             throw new InvalidArgumentsException("Which task must I unmark?");
         }
@@ -118,7 +118,7 @@ public class Parser {
     }
 
     // Deleting tasks
-    public void delete(String input) throws SharvaException {
+    private void delete(String input) throws SharvaException {
         if (input.trim().equals("delete")) {
             throw new InvalidArgumentsException("Which task must I delete?");
         }
@@ -137,7 +137,7 @@ public class Parser {
         tasks.delete(taskNumber - 1);
     }
 
-    public void toDo(String input) throws SharvaException {
+    private void toDo(String input) throws SharvaException {
         if (input.trim().equals("todo")) {
             // for multiple spaces after todo
             throw new InvalidArgumentsException("The description of a todo cannot be empty");
@@ -151,7 +151,7 @@ public class Parser {
         tasks.addTask(task);
     }
 
-    public void deadline(String input) throws SharvaException {
+    private void deadline(String input) throws SharvaException {
         if (input.trim().equals("deadline")) {
             // for multiple spaces after deadline
             throw new InvalidArgumentsException("The description of a deadline cannot be empty");
@@ -177,7 +177,7 @@ public class Parser {
         tasks.addTask(task);
     }
 
-    public void event(String input) throws SharvaException {
+    private void event(String input) throws SharvaException {
         if (input.trim().equals("event")) {
             // for multiple spaces after event
             throw new InvalidArgumentsException("The description of a event cannot be empty");
