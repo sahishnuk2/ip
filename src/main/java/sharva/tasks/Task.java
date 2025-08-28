@@ -34,6 +34,10 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    public boolean contains(String input) {
+        return this.description.contains(input);
+    }
+
     public boolean getIsDone() {
         return this.isDone;
     }

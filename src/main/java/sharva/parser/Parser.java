@@ -145,11 +145,15 @@ public class Parser {
             deadline(input);
         } else if (input.startsWith("event ")) {
             event(input);
+        } else if (input.startsWith("find ")) {
+            find(input);
         } else {
             handleInvalidInput(input);
         }
     }
 
+    public void handleInvalidInput(String input) throws SharvaException {
+        if (input.equals("todo") || input.equals("deadline") || input.equals("event") || input.equals("find")) {
     private void handleInvalidInput(String input) throws SharvaException {
         if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
             throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
@@ -159,6 +163,16 @@ public class Parser {
 
     private void list() {
         tasks.list();
+    }
+
+    public void find(String input) throws SharvaException {
+        if (input.trim().equals("find")) {
+            throw new InvalidArgumentsException("The description of a find cannot be empty");
+        }
+
+        String findItem = input.substring(5).trim();
+
+        tasks.find(findItem);
     }
 
     // Marking tasks
@@ -300,8 +314,4 @@ public class Parser {
         Task task = new Event(taskName, from, to);
         tasks.addTask(task);
     }
-
-
-
-
 }

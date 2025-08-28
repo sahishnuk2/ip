@@ -13,4 +13,5 @@ public interface TaskListService {
     public void delete(int index)  throws SharvaException;
     public void list();
     public List<Task> getTasks();
+    public void find(String input);
 }

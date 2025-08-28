@@ -85,6 +85,19 @@ public class TaskList implements TaskListService{
         message.echo(result.toString());
     }
 
+    public void find(String input) {
+        List<Task> filteredList = tasks.stream()
+                .filter(task -> task.contains(input))
+                .toList();
+
+        StringBuilder result = new StringBuilder("    Here are the matching tasks in your list:");
+        for (int i = 0; i < filteredList.size(); i++) {
+            result.append("\n").append(String.format("    %d. %s", i + 1, filteredList.get(i).toString()));
+        }
+        message.echo(result.toString());
+    }
+
+
     public List<Task> getTasks() {
         return tasks;
     }
