@@ -36,6 +36,7 @@ application {
 shadowJar {
     archiveBaseName = "sharva"
     archiveClassifier = null
+    archiveFileName = 'sharva.jar'
 }
 
 run{
