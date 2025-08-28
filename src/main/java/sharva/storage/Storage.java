@@ -12,6 +12,7 @@ import sharva.parser.Parser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,8 +24,9 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public List<Task> load() throws SharvaException {
+    public LoadResult load() throws SharvaException {
         List<Task> tasks = new ArrayList<>();
+        List<String> corruptedTaskErrors = new ArrayList<>();
         File sharva = new File(filePath);
         sharva.getParentFile().mkdirs();
 
@@ -39,13 +41,19 @@ public class Storage {
         try (Scanner scanner = new Scanner(sharva)) {
             while (scanner.hasNextLine()) {
                 String[] parts = scanner.nextLine().split(" @@@ ");
-                Task task = parseTaskFromParts(parts);
-                tasks.add(task);
+                try {
+                    Task task = parseTaskFromParts(parts);
+                    tasks.add(task);
+                } catch (SharvaException e) {
+                    corruptedTaskErrors.add(e.getMessage());
+                }
+
             }
         } catch (IOException e) {
             throw new StorageException("Error loading tasks in file: " + filePath);
         }
-        return tasks;
+
+        return new LoadResult(tasks, corruptedTaskErrors);
     }
 
     public void save(List<Task> tasks) throws SharvaException {
@@ -54,7 +62,7 @@ public class Storage {
             sb.append(task.toSaveString()).append("\n");
         }
         String allTasks = sb.toString();
-        saveTasks("./data/sharva.txt", allTasks);
+        saveTasks(filePath, allTasks);
     }
 
     private void saveTasks(String filePath, String allTasks) throws SharvaException{
@@ -81,6 +89,11 @@ public class Storage {
             if (parts.length != 5) {
                 throw new InvalidArgumentsException("Skipping event task (invalid format)");
             }
+            LocalDateTime from = Parser.parseDateTime(parts[3], false);
+            LocalDateTime to = Parser.parseDateTime(parts[4], true);
+            if (to.isBefore(from)) {
+                throw new InvalidArgumentsException("Skipping task (invalid duration)");
+            }
             task = new Event(parts[2], Parser.parseDateTime(parts[3], false), Parser.parseDateTime(parts[4], true));
         } else {
             throw new InvalidArgumentsException("Skipping task (invalid task type)");
@@ -92,5 +105,26 @@ public class Storage {
             throw new InvalidArgumentsException("Skipping task (invalid task status)");
         }
         return task;
+    }
+
+    // Inner class to encapsulate result
+    public static class LoadResult {
+        public final List<Task> tasks;
+        public String error = null;
+
+        public LoadResult(List<Task> tasks, List<String> corruptedLineErrors) {
+            this.tasks = tasks;
+            if (!corruptedLineErrors.isEmpty()) {
+                StringBuilder errors = new StringBuilder();
+                for (String str : corruptedLineErrors) {
+                    errors.append("\n").append("    ").append(str);
+                }
+                this.error = errors.toString();
+            }
+        }
+
+        public boolean hasCorruptedLines() {
+            return error != null;
+        }
     }
 }

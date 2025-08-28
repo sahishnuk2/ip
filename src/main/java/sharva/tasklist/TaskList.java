@@ -1,5 +1,6 @@
 package sharva.tasklist;
 
+import sharva.message.MessageService;
 import sharva.tasks.Task;
 import sharva.exceptions.InvalidIndexException;
 import sharva.exceptions.SharvaException;
@@ -8,16 +9,16 @@ import sharva.message.Message;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskList {
+public class TaskList implements TaskListService{
     private final List<Task> tasks;
-    private final Message message;
+    private final MessageService message;
 
-    public TaskList(List<Task> tasks, Message message) {
+    public TaskList(List<Task> tasks, MessageService message) {
         this.tasks = tasks;
         this.message = message;
     }
 
-    public TaskList(Message message) {
+    public TaskList(MessageService message) {
         this.tasks = new ArrayList<>();
         this.message = message;
     }

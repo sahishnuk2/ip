@@ -2,21 +2,24 @@ package sharva.message;
 
 import sharva.tasks.Task;
 
-public class Message {
+public class Message implements MessageService {
     public static final String HORIZONTAL_LINE = "    __________________________________________________________________";
 
+    @Override
     public void sayHello() {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Hello! I'm Sharva\n    What can I do for you?");
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void sayBye() {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Bye bro! See you later!");
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void mark(Task task) {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Nice! I've marked this task as done:");
@@ -24,6 +27,7 @@ public class Message {
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void unmark(Task task) {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    OK, I've marked this task as not done yet:");
@@ -31,6 +35,7 @@ public class Message {
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void addTask(Task task, int numberOfTasks) {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Got it. I've added this task:");
@@ -39,6 +44,7 @@ public class Message {
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void deleteTask(Task task, int numberOfTasks) {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Noted. I've removed this task:");
@@ -47,6 +53,7 @@ public class Message {
         System.out.println(HORIZONTAL_LINE);
     }
 
+    @Override
     public void echo(String input) {
         System.out.println(HORIZONTAL_LINE);
         System.out.println(input);
