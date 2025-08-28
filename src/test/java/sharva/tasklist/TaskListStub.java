@@ -49,6 +49,11 @@ public class TaskListStub implements TaskListService {
     }
 
     @Override
+    public void find(String input) {
+        calledMethods.add("find" + input);
+    }
+
+    @Override
     public List<Task> getTasks() {
         return new ArrayList<>();
     }

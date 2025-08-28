@@ -61,15 +61,17 @@ public class Parser {
             toDo(input);
         } else if (input.startsWith("deadline ")) {
             deadline(input);
-        } else if (input.startsWith("event ")){
+        } else if (input.startsWith("event ")) {
             event(input);
+        } else if (input.startsWith("find ")) {
+            find(input);
         } else {
             handleInvalidInput(input);
         }
     }
 
     public void handleInvalidInput(String input) throws SharvaException {
-        if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
+        if (input.equals("todo") || input.equals("deadline") || input.equals("event") || input.equals("find")) {
             throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
         }
         throw new InvalidCommandException();
@@ -77,6 +79,16 @@ public class Parser {
 
     public void list() {
         tasks.list();
+    }
+
+    public void find(String input) throws SharvaException {
+        if (input.trim().equals("find")) {
+            throw new InvalidArgumentsException("The description of a find cannot be empty");
+        }
+
+        String findItem = input.substring(5).trim();
+
+        tasks.find(findItem);
     }
 
     // Marking tasks
