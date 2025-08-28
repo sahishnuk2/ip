@@ -152,10 +152,8 @@ public class Parser {
         }
     }
 
-    public void handleInvalidInput(String input) throws SharvaException {
-        if (input.equals("todo") || input.equals("deadline") || input.equals("event") || input.equals("find")) {
     private void handleInvalidInput(String input) throws SharvaException {
-        if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
+        if (input.equals("todo") || input.equals("deadline") || input.equals("event") || input.equals("find")) {
             throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
         }
         throw new InvalidCommandException();
@@ -165,7 +163,7 @@ public class Parser {
         tasks.list();
     }
 
-    public void find(String input) throws SharvaException {
+    private void find(String input) throws SharvaException {
         if (input.trim().equals("find")) {
             throw new InvalidArgumentsException("The description of a find cannot be empty");
         }
