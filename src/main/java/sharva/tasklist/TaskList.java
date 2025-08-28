@@ -4,7 +4,6 @@ import sharva.message.MessageService;
 import sharva.tasks.Task;
 import sharva.exceptions.InvalidIndexException;
 import sharva.exceptions.SharvaException;
-import sharva.message.Message;
 
 import java.util.ArrayList;
 import java.util.List;

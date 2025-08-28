@@ -143,7 +143,7 @@ public class Parser {
             toDo(input);
         } else if (input.startsWith("deadline ")) {
             deadline(input);
-        } else if (input.startsWith("event ")){
+        } else if (input.startsWith("event ")) {
             event(input);
         } else {
             handleInvalidInput(input);

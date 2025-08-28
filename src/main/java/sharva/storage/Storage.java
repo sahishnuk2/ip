@@ -79,7 +79,7 @@ public class Storage {
         saveTasks(filePath, allTasks);
     }
 
-    private void saveTasks(String filePath, String allTasks) throws SharvaException{
+    private void saveTasks(String filePath, String allTasks) throws SharvaException {
         try (FileWriter fileWriter = new FileWriter(filePath, false)) {
             fileWriter.write(allTasks);
         } catch (IOException e) {
@@ -87,7 +87,7 @@ public class Storage {
         }
     }
 
-    private Task parseTaskFromParts(String[] parts) throws SharvaException{
+    private Task parseTaskFromParts(String[] parts) throws SharvaException {
         Task task;
         if (parts[0].equals("T")) {
             if (parts.length != 3) {
