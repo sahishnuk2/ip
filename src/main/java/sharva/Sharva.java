@@ -8,12 +8,24 @@ import sharva.tasklist.TaskList;
 
 import java.util.Scanner;
 
+/**
+ * Main class used to run Sharva.
+ */
 public class Sharva {
     private final Storage storage;
     private TaskList tasks;
     private final Message message;
     private final Parser parser;
 
+    /**
+     * Sets up the messaging system, initialises the storage system
+     * with the given filepath,loads existing tasks from the file, and handles
+     * corrupted or invalid task entries if found. If loading fails, an empty
+     * task list is created instead. Finally, the parser is initialised with
+     * the task list.
+     *
+     * @param filePath the path of the file where tasks are stored
+     */
     public Sharva(String filePath) {
         this.message = new Message();
         this.storage = new Storage(filePath);
@@ -30,6 +42,9 @@ public class Sharva {
         this.parser = new Parser(tasks);
     }
 
+    /**
+     * Runs the chatbot until the user types "bye".
+     */
     public void run() {
         message.sayHello();
         Scanner scanner = new Scanner(System.in);

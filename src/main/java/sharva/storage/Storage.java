@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Handles storing and retrieving task from a file.
+ */
 public class Storage {
     private final String filePath;
 
@@ -24,6 +27,12 @@ public class Storage {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the storage file. If certain lines are corrupted,
+     * the error messages are recorded.
+     * @return a LoadResult object that stores the tasks and errors
+     * @throws SharvaException if storage file cannot be created
+     */
     public LoadResult load() throws SharvaException {
         List<Task> tasks = new ArrayList<>();
         List<String> corruptedTaskErrors = new ArrayList<>();
@@ -56,6 +65,11 @@ public class Storage {
         return new LoadResult(tasks, corruptedTaskErrors);
     }
 
+    /**
+     * Saves tasks into the storage file in string format.
+     * @param tasks the list of tasks to be saved
+     * @throws SharvaException if an I/O error occurs during saving
+     */
     public void save(List<Task> tasks) throws SharvaException {
         StringBuilder sb = new StringBuilder();
         for (Task task : tasks) {
