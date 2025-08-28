@@ -5,6 +5,7 @@ import sharva.exceptions.InvalidCommandException;
 import sharva.exceptions.InvalidIndexException;
 import sharva.exceptions.SharvaException;
 import sharva.tasklist.TaskList;
+import sharva.tasklist.TaskListService;
 import sharva.tasks.Deadline;
 import sharva.tasks.Event;
 import sharva.tasks.Task;
@@ -18,7 +19,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class Parser {
-    private final TaskList tasks;
+    private final TaskListService tasks;
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("d-M-yyyy"),
@@ -43,7 +44,7 @@ public class Parser {
             DateTimeFormatter.ofPattern("h.mma")
     );
 
-    public Parser(TaskList tasks) {
+    public Parser(TaskListService tasks) {
         this.tasks = tasks;
     }
 
@@ -227,7 +228,6 @@ public class Parser {
                 // Try next formatter
             }
         }
-
         // If not successful
         throw new InvalidArgumentsException("Date format is incorrect");
     }

@@ -9,7 +9,7 @@ import sharva.message.Message;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskList {
+public class TaskList implements TaskListService{
     private final List<Task> tasks;
     private final MessageService message;
 
