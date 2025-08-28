@@ -18,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * Handles user input
+ */
 public class Parser {
     private final TaskListService tasks;
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
@@ -48,6 +51,85 @@ public class Parser {
         this.tasks = tasks;
     }
 
+    /**
+     * Parses the user input string into a LocalDate.
+     *
+     * @param date the user input string
+     * @return the corresponding LocalDate object
+     * @throws SharvaException if the input format is incorrect
+     */
+    public static LocalDate parseDate(String date) throws SharvaException {
+        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
+            try {
+                return LocalDate.parse(date, formatter);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+        // If not successful
+        throw new InvalidArgumentsException("Date format is incorrect");
+    }
+
+    /**
+     * Parses the user input string into a LocalTime.
+     *
+     * @param time the user input string
+     * @return the corresponding LocalTime object
+     * @throws SharvaException if the input format is incorrect
+     */
+    public static LocalTime parseTime(String time) throws SharvaException {
+        for (DateTimeFormatter formatter : TIME_FORMATTERS) {
+            try {
+                return LocalTime.parse(time.toLowerCase(), formatter);
+            } catch (DateTimeParseException e) {
+                // Try next formatter
+            }
+        }
+        throw new InvalidArgumentsException("Time format is incorrect");
+    }
+
+    /**
+     * Parses the user input string into a LocalDateTime.
+     * <p>
+     * If the input contains a date, the isEnd parameter determines
+     * the time of day: 23:59 if true, or 00:00 if false.
+     * If the input does not contain a date, isEnd parameter is ignored.
+     * @param input the user input string
+     * @param isEnd indicates whether the time represents the end of a period
+     * @return the corresponding LocalDateTime object
+     * @throws SharvaException if input format is incorrect
+     */
+    public static LocalDateTime parseDateTime(String input, boolean isEnd) throws SharvaException {
+        String[] parts = input.split(" ");
+        LocalDate date;
+        LocalTime time = null;
+        if (parts.length == 1) {
+            date = parseDate(parts[0]);
+        } else if (parts.length == 2 ) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1]);
+        } else if (parts.length == 3) {
+            date = parseDate(parts[0]);
+            time = parseTime(parts[1] + " " + parts[2]);
+        } else {
+            throw new InvalidArgumentsException("Invalid date and time format");
+        }
+        if (time == null && isEnd) {
+            return LocalDateTime.of(date, LocalTime.of(23, 59));
+        } else if (time == null) {
+            return LocalDateTime.of(date, LocalTime.of(0, 0));
+        }
+        return LocalDateTime.of(date, time);
+    }
+
+    /**
+     * Parses the user input string and delegates to the appropriate command method.
+     * <p>
+     * Recognised commands include: list, mark, unmark, add, delete, todo, deadline,
+     * and event.
+     * @param input the user input string
+     * @throws SharvaException if the input format is incorrect
+     */
     public void parseInput(String input) throws SharvaException {
         if (input.equals("list")) {
             list();
@@ -68,19 +150,19 @@ public class Parser {
         }
     }
 
-    public void handleInvalidInput(String input) throws SharvaException {
+    private void handleInvalidInput(String input) throws SharvaException {
         if (input.equals("todo") || input.equals("deadline") || input.equals("event")) {
             throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
         }
         throw new InvalidCommandException();
     }
 
-    public void list() {
+    private void list() {
         tasks.list();
     }
 
     // Marking tasks
-    public void mark(String input) throws SharvaException {
+    private void mark(String input) throws SharvaException {
         if (input.trim().equals("mark")) {
             throw new InvalidArgumentsException("Which task must I mark?");
         }
@@ -100,7 +182,7 @@ public class Parser {
         tasks.mark(taskNumber - 1);
     }
 
-    public void unmark(String input) throws SharvaException {
+    private void unmark(String input) throws SharvaException {
         if (input.trim().equals("unmark")) {
             throw new InvalidArgumentsException("Which task must I unmark?");
         }
@@ -118,7 +200,7 @@ public class Parser {
     }
 
     // Deleting tasks
-    public void delete(String input) throws SharvaException {
+    private void delete(String input) throws SharvaException {
         if (input.trim().equals("delete")) {
             throw new InvalidArgumentsException("Which task must I delete?");
         }
@@ -137,7 +219,7 @@ public class Parser {
         tasks.delete(taskNumber - 1);
     }
 
-    public void toDo(String input) throws SharvaException {
+    private void toDo(String input) throws SharvaException {
         if (input.trim().equals("todo")) {
             // for multiple spaces after todo
             throw new InvalidArgumentsException("The description of a todo cannot be empty");
@@ -151,7 +233,7 @@ public class Parser {
         tasks.addTask(task);
     }
 
-    public void deadline(String input) throws SharvaException {
+    private void deadline(String input) throws SharvaException {
         if (input.trim().equals("deadline")) {
             // for multiple spaces after deadline
             throw new InvalidArgumentsException("The description of a deadline cannot be empty");
@@ -177,7 +259,7 @@ public class Parser {
         tasks.addTask(task);
     }
 
-    public void event(String input) throws SharvaException {
+    private void event(String input) throws SharvaException {
         if (input.trim().equals("event")) {
             // for multiple spaces after event
             throw new InvalidArgumentsException("The description of a event cannot be empty");
@@ -220,51 +302,6 @@ public class Parser {
     }
 
 
-    public static LocalDate parseDate(String date) throws SharvaException {
-        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
-            try {
-                return LocalDate.parse(date, formatter);
-            } catch (DateTimeParseException e) {
-                // Try next formatter
-            }
-        }
-        // If not successful
-        throw new InvalidArgumentsException("Date format is incorrect");
-    }
-
-    public static LocalTime parseTime(String time) throws SharvaException {
-        for (DateTimeFormatter formatter : TIME_FORMATTERS) {
-            try {
-                return LocalTime.parse(time.toLowerCase(), formatter);
-            } catch (DateTimeParseException e) {
-                // Try next formatter
-            }
-        }
-        throw new InvalidArgumentsException("Time format is incorrect");
-    }
-
-    public static LocalDateTime parseDateTime(String input, boolean isEnd) throws SharvaException {
-        String[] parts = input.split(" ");
-        LocalDate date;
-        LocalTime time = null;
-        if (parts.length == 1) {
-            date = parseDate(parts[0]);
-        } else if (parts.length == 2 ) {
-            date = parseDate(parts[0]);
-            time = parseTime(parts[1]);
-        } else if (parts.length == 3) {
-            date = parseDate(parts[0]);
-            time = parseTime(parts[1] + " " + parts[2]);
-        } else {
-            throw new InvalidArgumentsException("Invalid date and time format");
-        }
-        if (time == null && isEnd) {
-            return LocalDateTime.of(date, LocalTime.of(23, 59));
-        } else if (time == null) {
-            return LocalDateTime.of(date, LocalTime.of(0, 0));
-        }
-        return LocalDateTime.of(date, time);
-    }
 
 
 }

@@ -12,6 +12,10 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /**
+     * Marks this task as done
+     * @throws SharvaException if task is already marked
+     */
     public void markAsDone() throws SharvaException {
         if (isDone) {
             throw new InvalidArgumentsException("Completing a completed task? How hardworking");
@@ -19,6 +23,10 @@ public abstract class Task {
         this.isDone = true;
     }
 
+    /**
+     * Unmarks the task as not done
+     * @throws SharvaException if task in already unmarked
+     */
     public void undoTask() throws SharvaException {
         if (!isDone) {
             throw new InvalidArgumentsException("Bro, the task is not even completed");
@@ -40,5 +48,9 @@ public abstract class Task {
         return status + this.description;
     }
 
+    /**
+     * Converts this task into a string format suitable for saving to a file.
+     * @return the string representation of the task for storage
+     */
     public abstract String toSaveString();
 }
