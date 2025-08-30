@@ -4,7 +4,6 @@ import sharva.exceptions.InvalidArgumentsException;
 import sharva.exceptions.InvalidCommandException;
 import sharva.exceptions.InvalidIndexException;
 import sharva.exceptions.SharvaException;
-import sharva.tasklist.TaskList;
 import sharva.tasklist.TaskListService;
 import sharva.tasks.Deadline;
 import sharva.tasks.Event;

@@ -33,14 +33,14 @@ public class ParserTest {
 
         List<String> calls = stub.getCalledMethods();
         assertEquals(1, calls.size());
-        assertEquals("add:" + new ToDo("read book").toString(), calls.get(0));
+        assertEquals("add:" + new ToDo("read book"), calls.get(0));
 
         parser.parseInput("deadline deadline /by 12122025");
 
         assertEquals(2, calls.size());
         assertEquals("add:" + new Deadline(
                 "deadline",
-                LocalDateTime.of(2025, 12, 12, 23, 59)).toString()
+                LocalDateTime.of(2025, 12, 12, 23, 59))
         , calls.get(1));
 
         parser.parseInput("event event /from 12122025 /to 13122025");
@@ -50,12 +50,12 @@ public class ParserTest {
                 "event",
                 LocalDateTime.of(2025, 12, 12, 0, 0),
                 LocalDateTime.of(2025, 12, 13, 23, 59)
-        ).toString(), calls.get(2));
+        ), calls.get(2));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"todo", "deadline", "event", "todo  ", "deadline  ", "event  "})
-    public void add_invalidTask_taskAdded(String input) {
+    public void add_invalidTask_exceptionThrown(String input) {
         try {
             parser.parseInput(input);
         } catch (SharvaException e) {
@@ -65,7 +65,7 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"ls", "toodo", "leo", "thomas  ", "hi bro", "booye"})
-    public void add_invalidInput_taskAdded(String input) {
+    public void add_invalidInput_exceptionThrown(String input) {
         try {
             parser.parseInput(input);
         } catch (SharvaException e) {
@@ -93,17 +93,18 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
-    public void mark_invalidTaskNumber_taskMarked(int index) throws SharvaException {
+    public void mark_invalidTaskNumber_exceptionThrown(int index) {
         try {
             parser.parseInput("mark " + index);
         } catch (SharvaException e) {
             assertEquals("Invalid task number!", e.getMessage());
+            // Exception is thrown in parser class during thr regex checking
         }
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0})
-    public void unmark_invalidTaskNumber_taskMarked(int index) throws SharvaException {
+    public void unmark_invalidTaskNumber_exceptionThrown(int index) {
         try {
             parser.parseInput("unmark " + index);
         } catch (SharvaException e) {
@@ -113,7 +114,7 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"mark1", "mark  1", "unmark", "unmark1"})
-    public void markAndUnmark_invalidTaskNumber_taskMarked(String str) throws SharvaException {
+    public void markAndUnmark_invalidTaskNumber_exceptionThrown(String str) {
         assertThrows(SharvaException.class, () -> parser.parseInput(str));
     }
 
@@ -136,7 +137,7 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"29/13/2025", "057225", "tmr"})
-    public void parseDate_invalidInput_correctDateTime(String input) {
+    public void parseDate_invalidInput_exceptionThrown(String input) {
         try {
             LocalDate date = Parser.parseDate(input);
         } catch (SharvaException e) {
@@ -153,9 +154,9 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"7pm", "21:00 pm", "1:62pm", "24"})
-    public void parseTime_invalidInput_correctDateTime(String input) {
+    public void parseTime_invalidInput_exceptionThrown(String input) {
         try {
-            LocalTime time = Parser.parseTime(input);
+            Parser.parseTime(input);
         } catch (SharvaException e) {
             assertEquals("Time format is incorrect", e.getMessage());
         }
@@ -177,7 +178,7 @@ public class ParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"02122003 211", "02/12/2003 9.1 pm", "02-1-2003 9:9pm", "2/12/203 9.19m", "212/03 9.19pm", "021203 2:19"})
-    public void parseDateTime_invalidInputWithTime_correctDateTime(String input) throws SharvaException {
+    public void parseDateTime_invalidInputWithTime_exceptionThrown(String input) throws SharvaException {
         assertThrows(SharvaException.class, () -> Parser.parseDateTime(input, true));
     }
 }

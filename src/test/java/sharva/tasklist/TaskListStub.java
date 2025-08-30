@@ -17,20 +17,12 @@ public class TaskListStub implements TaskListService {
 
     @Override
     public void mark(int index) throws SharvaException{
-        if (index >= 0) {
-            calledMethods.add("mark:" + (index + 1));
-            return;
-        }
-        //throw new InvalidIndexException();
+        calledMethods.add("mark:" + (index + 1));
     }
 
     @Override
     public void unmark(int index) throws SharvaException {
-        if (index >= 0) {
-            calledMethods.add("unmark:" + (index + 1));
-            return;
-        }
-        throw new InvalidIndexException();
+        calledMethods.add("unmark:" + (index + 1));
     }
 
     @Override
@@ -39,7 +31,7 @@ public class TaskListStub implements TaskListService {
     }
 
     @Override
-    public void delete(int index) throws SharvaException {
+    public void delete(int index) {
         calledMethods.add("delete:" + index);
     }
 
