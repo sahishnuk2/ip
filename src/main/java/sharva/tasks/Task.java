@@ -3,10 +3,20 @@ package sharva.tasks;
 import sharva.exceptions.InvalidArgumentsException;
 import sharva.exceptions.SharvaException;
 
+/**
+ * Represents an abstract task with a description and completion status.
+ * This class serves as the base class for all types of tasks in the system.
+ */
 public abstract class Task {
     private final String description;
     private boolean isDone;
 
+    /**
+     * Constructs a new Task with the specified description.
+     * The task is initially marked as not done.
+     *
+     * @param description the description of the task
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;

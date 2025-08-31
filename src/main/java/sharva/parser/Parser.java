@@ -1,5 +1,12 @@
 package sharva.parser;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+
 import sharva.exceptions.InvalidArgumentsException;
 import sharva.exceptions.InvalidCommandException;
 import sharva.exceptions.InvalidIndexException;
@@ -10,18 +17,10 @@ import sharva.tasks.Event;
 import sharva.tasks.Task;
 import sharva.tasks.ToDo;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-
 /**
  * Handles user input
  */
 public class Parser {
-    private final TaskListService tasks;
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("d-M-yyyy"),
@@ -45,6 +44,7 @@ public class Parser {
             DateTimeFormatter.ofPattern("h:mma"),
             DateTimeFormatter.ofPattern("h.mma")
     );
+    private final TaskListService tasks;
 
     public Parser(TaskListService tasks) {
         this.tasks = tasks;
@@ -104,7 +104,7 @@ public class Parser {
         LocalTime time = null;
         if (parts.length == 1) {
             date = parseDate(parts[0]);
-        } else if (parts.length == 2 ) {
+        } else if (parts.length == 2) {
             date = parseDate(parts[0]);
             time = parseTime(parts[1]);
         } else if (parts.length == 3) {
