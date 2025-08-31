@@ -39,7 +39,7 @@ shadowJar {
     archiveFileName = 'sharva.jar'
 }
 
-run{
+run {
     standardInput = System.in
 }
 
