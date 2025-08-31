@@ -6,7 +6,8 @@ import sharva.tasks.Task;
  * Handles user interface
  */
 public class Message implements MessageService {
-    public static final String HORIZONTAL_LINE = "    __________________________________________________________________";
+    public static final String HORIZONTAL_LINE =
+            "    __________________________________________________________________";
 
     /**
      * Greets the user
@@ -63,7 +64,7 @@ public class Message implements MessageService {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Got it. I've added this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", numberOfTasks));
+        System.out.printf("    Now You have %d task(s) in the list%n", numberOfTasks);
         System.out.println(HORIZONTAL_LINE);
     }
 
@@ -78,7 +79,7 @@ public class Message implements MessageService {
         System.out.println(HORIZONTAL_LINE);
         System.out.println("    Noted. I've removed this task:");
         System.out.println("    " + task);
-        System.out.println(String.format("    Now You have %d task(s) in the list", numberOfTasks));
+        System.out.printf("    Now You have %d task(s) in the list%n", numberOfTasks);
         System.out.println(HORIZONTAL_LINE);
     }
 

@@ -1,7 +1,5 @@
 package sharva.tasklist;
 
-import sharva.exceptions.InvalidIndexException;
-import sharva.tasklist.TaskListService;
 import sharva.tasks.Task;
 import sharva.exceptions.SharvaException;
 
