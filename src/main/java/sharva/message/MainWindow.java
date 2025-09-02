@@ -1,3 +1,5 @@
+package sharva.message;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -19,8 +21,8 @@ public class MainWindow extends AnchorPane {
 
     private Sharva sharva;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("./images/DaUser.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("./images/DaDuke.png"));
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
+    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
 
     @FXML
     public void initialize() {
@@ -29,16 +31,16 @@ public class MainWindow extends AnchorPane {
 
     public void setSharva(Sharva sharva) {
         this.sharva = sharva;
+        this.sharva.start(this.dialogContainer);
     }
 
     @FXML
     private void handleUserInput() {
         String userText = userInput.getText();
-        String sharvaText = "Sharva heard: " + userText;
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(userText, userImage),
-                DialogBox.getSharvaDialog(sharvaText, dukeImage)
+                DialogBox.getUserDialog(userText, userImage)
         );
+        sharva.run(userText);
         userInput.clear();
     }
 }

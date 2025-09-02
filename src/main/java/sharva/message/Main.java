@@ -1,3 +1,5 @@
+package sharva.message;
+
 import java.io.IOException;
 
 import javafx.application.Application;
