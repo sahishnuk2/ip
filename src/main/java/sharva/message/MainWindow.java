@@ -37,10 +37,12 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String userText = userInput.getText();
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(userText, userImage)
-        );
-        sharva.run(userText);
-        userInput.clear();
+        if (!userText.isEmpty()) {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(userText, userImage)
+            );
+            sharva.run(userText);
+            userInput.clear();
+        }
     }
 }
