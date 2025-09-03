@@ -47,11 +47,6 @@ public class MessageMock implements MessageService {
 
     }
 
-    @Override
-    public void sayBye() {
-
-    }
-
     public void reset() {
         lastTask = null;
         lastAction = null;

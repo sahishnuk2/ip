@@ -25,15 +25,6 @@ public class Message implements MessageService {
     }
 
     /**
-     * Bids farewell to the user
-     */
-    @Override
-    public void sayBye() {
-        DialogBox d = DialogBox.getSharvaDialog("Bye bro! See you later!", sharvaImage);
-        dialogContainer.getChildren().addAll(d);
-    }
-
-    /**
      * Informs the user that the specified task is marked
      * @param task the task to be marked
      */
