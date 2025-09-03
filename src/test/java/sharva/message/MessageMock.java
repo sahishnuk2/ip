@@ -47,6 +47,11 @@ public class MessageMock implements MessageService {
 
     }
 
+    @Override
+    public void list(String input) {
+        echo(input);
+    }
+
     public void reset() {
         lastTask = null;
         lastAction = null;

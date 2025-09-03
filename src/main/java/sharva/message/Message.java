@@ -41,6 +41,7 @@ public class Message implements MessageService {
     @Override
     public void unmark(Task task) {
         DialogBox d = DialogBox.getSharvaDialog("OK, I've marked this task as not done yet:\n" + task, sharvaImage);
+        d.getStyleClass().add("orange");
         dialogContainer.getChildren().addAll(d);
     }
 
@@ -69,6 +70,13 @@ public class Message implements MessageService {
         String sharvaDialog = String.format("Noted. I've removed this task:\n%s\nNow you have %d task(s) in the list",
                 task, numberOfTasks);
         DialogBox d = DialogBox.getSharvaDialog(sharvaDialog, sharvaImage);
+        d.getStyleClass().add("red");
+        dialogContainer.getChildren().addAll(d);
+    }
+
+    public void list(String input) {
+        DialogBox d = DialogBox.getSharvaDialog(input, sharvaImage);
+        d.getStyleClass().add("yellow");
         dialogContainer.getChildren().addAll(d);
     }
 

@@ -157,9 +157,9 @@ public class TaskListTest {
     // add a test for list -> should check for input string and also if last action called is echo.
     @Test
     public void list_default_success() {
-        StringBuilder result = new StringBuilder("    Here are the tasks in your list:");
+        StringBuilder result = new StringBuilder("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            result.append("\n").append(String.format("    %d. %s", i + 1, tasks.get(i).toString()));
+            result.append("\n").append(String.format("%d. %s", i + 1, tasks.get(i).toString()));
         }
 
         taskList.list();

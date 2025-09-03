@@ -1,5 +1,5 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #00ffbf, #00ddff);
+    -fx-background-color: linear-gradient(to bottom right, #00ddff, #00ffbf);
     -fx-border-color: lightgreen;
     -fx-border-width: 2px;
     -fx-background-radius: 1em 1em 0 1em;
@@ -10,6 +10,8 @@
 }
 
 .reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #00ffbf, #00ddff);
+    -fx-border-color: lightgreen;
     -fx-background-radius: 1em 1em 1em 0;
     -fx-border-radius: 1em 1em 1em 0;
 }
@@ -24,4 +26,20 @@
 
     /* Rotate image clockwise by degrees. */
     -fx-rotate: 0;
+}
+
+.orange > .reply-label {
+    -fx-background-color: linear-gradient(to bottom right, orange, orangered);
+    -fx-border-color: firebrick;
+}
+
+.yellow > .reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #fff458, #ffd13d);
+    -fx-border-color: yellow;
+}
+
+.red > .reply-label {
+    -fx-background-color: linear-gradient(to bottom right, orangered, red);
+    -fx-border-color: darkred;
+    -fx-text-fill: #f0f0f0;
 }

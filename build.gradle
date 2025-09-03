@@ -30,7 +30,7 @@ test {
 }
 
 application {
-    mainClass.set("sharva.Sharva")
+    mainClass.set("sharva.Launcher")
 }
 
 shadowJar {
