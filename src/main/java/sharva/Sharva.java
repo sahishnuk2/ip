@@ -1,15 +1,14 @@
 package sharva;
 
+import javafx.scene.layout.VBox;
 import sharva.exceptions.SharvaException;
 import sharva.message.Message;
 import sharva.parser.Parser;
 import sharva.storage.Storage;
 import sharva.tasklist.TaskList;
 
-import java.util.Scanner;
-
 /**
- * Main class used to run Sharva.
+ * sharva.message.Main class used to run Sharva.
  */
 public class Sharva {
     private final Storage storage;
@@ -33,10 +32,10 @@ public class Sharva {
             Storage.LoadResult result = storage.load();
             this.tasks = new TaskList(result.tasks, message);
             if (result.hasCorruptedLines()) {
-                message.echo("    Some tasks were removed due to file corruption: " + "    " + result.error);
+                message.echo("Some tasks were removed due to file corruption: " + result.error);
             }
         } catch (SharvaException e) {
-            message.echo("    " + e.getMessage());
+            message.echo(e.getMessage());
             this.tasks = new TaskList(message);
         }
         this.parser = new Parser(tasks);
@@ -45,25 +44,18 @@ public class Sharva {
     /**
      * Runs the chatbot until the user types "bye".
      */
-    public void run() {
-        message.sayHello();
-        Scanner scanner = new Scanner(System.in);
-        String curr = scanner.nextLine();
-        while (!curr.equals("bye")) {
-            try {
-                parser.parseInput(curr);
-                storage.save(tasks.getTasks());
-            } catch (SharvaException e) {
-                message.echo("    " + e.getMessage());
-            }
-            curr = scanner.nextLine();
-        }
-        message.sayBye();
-        scanner.close();
+    public void start(VBox dialogContainer) {
+        message.setDialogContainer(dialogContainer);
+        message.sayHello(); // add the dialogBox to the dialogContainer
+
     }
 
-    public static void main(String[] args) {
-        Sharva sharva = new Sharva("./data/sharva.txt");
-        sharva.run();
+    public void run(String input) {
+        try {
+            parser.parseInput(input);
+            storage.save(tasks.getTasks());
+        } catch (SharvaException e) {
+            message.echo(e.getMessage());
+        }
     }
 }

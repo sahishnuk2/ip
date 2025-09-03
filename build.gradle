@@ -30,7 +30,7 @@ test {
 }
 
 application {
-    mainClass.set("sharva.Sharva")
+    mainClass.set("sharva.Launcher")
 }
 
 shadowJar {
@@ -39,7 +39,7 @@ shadowJar {
     archiveFileName = 'sharva.jar'
 }
 
-run{
+run {
     standardInput = System.in
 }
 

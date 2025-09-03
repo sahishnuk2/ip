@@ -35,13 +35,6 @@ public class StorageTest {
         tempFile.delete(); // remove temp file after test
     }
 
-    private String createExpectedMessage(String input) {
-        return Message.HORIZONTAL_LINE + "\n" +
-                input + "\n" +
-                Message.HORIZONTAL_LINE + "\n";
-
-    }
-
     @Test
     public void load_emptyfile_returnsEmptyList() throws SharvaException {
         Storage.LoadResult result = storage.load();

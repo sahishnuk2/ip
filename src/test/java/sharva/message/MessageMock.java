@@ -48,8 +48,8 @@ public class MessageMock implements MessageService {
     }
 
     @Override
-    public void sayBye() {
-
+    public void list(String input) {
+        echo(input);
     }
 
     public void reset() {

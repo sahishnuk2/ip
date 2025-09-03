@@ -1,32 +1,27 @@
 package sharva.message;
 
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import sharva.tasks.Task;
 
 /**
  * Handles user interface
  */
 public class Message implements MessageService {
-    public static final String HORIZONTAL_LINE =
-            "    __________________________________________________________________";
+    private VBox dialogContainer;
 
+    private Image sharvaImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+
+    public void setDialogContainer(VBox dialogContainer) {
+        this.dialogContainer = dialogContainer;
+    }
     /**
      * Greets the user
      */
     @Override
     public void sayHello() {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Hello! I'm Sharva\n    What can I do for you?");
-        System.out.println(HORIZONTAL_LINE);
-    }
-
-    /**
-     * Bids farewell to the user
-     */
-    @Override
-    public void sayBye() {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Bye bro! See you later!");
-        System.out.println(HORIZONTAL_LINE);
+        DialogBox d = DialogBox.getSharvaDialog("Hello! I'm Sharva\nWhat can I do for you?", sharvaImage);
+        dialogContainer.getChildren().addAll(d);
     }
 
     /**
@@ -35,10 +30,8 @@ public class Message implements MessageService {
      */
     @Override
     public void mark(Task task) {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Nice! I've marked this task as done:");
-        System.out.println("    " + task);
-        System.out.println(HORIZONTAL_LINE);
+        DialogBox d = DialogBox.getSharvaDialog("Nice! I've marked this task as done:\n" + task, sharvaImage);
+        dialogContainer.getChildren().addAll(d);
     }
 
     /**
@@ -47,10 +40,9 @@ public class Message implements MessageService {
      */
     @Override
     public void unmark(Task task) {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    OK, I've marked this task as not done yet:");
-        System.out.println("    " + task);
-        System.out.println(HORIZONTAL_LINE);
+        DialogBox d = DialogBox.getSharvaDialog("OK, I've marked this task as not done yet:\n" + task, sharvaImage);
+        d.getStyleClass().add("orange");
+        dialogContainer.getChildren().addAll(d);
     }
 
     /**
@@ -61,11 +53,10 @@ public class Message implements MessageService {
      */
     @Override
     public void addTask(Task task, int numberOfTasks) {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Got it. I've added this task:");
-        System.out.println("    " + task);
-        System.out.printf("    Now You have %d task(s) in the list%n", numberOfTasks);
-        System.out.println(HORIZONTAL_LINE);
+        String sharvaDialog = String.format("Got it. I've added this task:\n%s\nNow you have %d task(s) in the list",
+                        task, numberOfTasks);
+        DialogBox d = DialogBox.getSharvaDialog(sharvaDialog, sharvaImage);
+        dialogContainer.getChildren().addAll(d);
     }
 
     /**
@@ -76,11 +67,17 @@ public class Message implements MessageService {
      */
     @Override
     public void deleteTask(Task task, int numberOfTasks) {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println("    Noted. I've removed this task:");
-        System.out.println("    " + task);
-        System.out.printf("    Now You have %d task(s) in the list%n", numberOfTasks);
-        System.out.println(HORIZONTAL_LINE);
+        String sharvaDialog = String.format("Noted. I've removed this task:\n%s\nNow you have %d task(s) in the list",
+                task, numberOfTasks);
+        DialogBox d = DialogBox.getSharvaDialog(sharvaDialog, sharvaImage);
+        d.getStyleClass().add("red");
+        dialogContainer.getChildren().addAll(d);
+    }
+
+    public void list(String input) {
+        DialogBox d = DialogBox.getSharvaDialog(input, sharvaImage);
+        d.getStyleClass().add("yellow");
+        dialogContainer.getChildren().addAll(d);
     }
 
     /**
@@ -89,8 +86,7 @@ public class Message implements MessageService {
      */
     @Override
     public void echo(String input) {
-        System.out.println(HORIZONTAL_LINE);
-        System.out.println(input);
-        System.out.println(HORIZONTAL_LINE);
+        DialogBox d = DialogBox.getSharvaDialog(input, sharvaImage);
+        dialogContainer.getChildren().addAll(d);
     }
 }
