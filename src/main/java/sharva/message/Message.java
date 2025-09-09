@@ -10,7 +10,7 @@ import sharva.tasks.Task;
 public class Message implements MessageService {
     private VBox dialogContainer;
 
-    private Image sharvaImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private Image sharvaImage = new Image(this.getClass().getResourceAsStream("/images/duke.png"));
 
     public void setDialogContainer(VBox dialogContainer) {
         this.dialogContainer = dialogContainer;
