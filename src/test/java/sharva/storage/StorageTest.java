@@ -85,11 +85,11 @@ public class StorageTest {
 
          String expected = """
                  
-                     Skipping task (invalid task type)
-                     Skipping task (invalid task status)
-                     Skipping deadline task (invalid format)
-                     Skipping task (invalid duration)
-                     Skipping event task (invalid format)\
+                 Skipping task (invalid task type)
+                 Skipping task (invalid task status)
+                 Skipping deadline task (invalid format)
+                 Skipping task (invalid duration)
+                 Skipping event task (invalid format)\
                  """;
 
         assertEquals(3, tasks.size());
