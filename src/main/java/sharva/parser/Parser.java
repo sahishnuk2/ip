@@ -22,15 +22,11 @@ import sharva.tasks.ToDo;
  */
 public class Parser {
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
-            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("d-M-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yyyy"),
             DateTimeFormatter.ofPattern("dd-M-yy"),
             DateTimeFormatter.ofPattern("d-M-yy"),
-            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-            DateTimeFormatter.ofPattern("dd/M/yyyy"),
             DateTimeFormatter.ofPattern("d/M/yyyy"),
-            DateTimeFormatter.ofPattern("dd/M/yy"),
             DateTimeFormatter.ofPattern("d/M/yy"),
             DateTimeFormatter.ofPattern("ddMMyyyy"),
             DateTimeFormatter.ofPattern("ddMMyy")
