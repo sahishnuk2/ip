@@ -2,6 +2,7 @@ package sharva.tasklist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import sharva.exceptions.InvalidIndexException;
 import sharva.exceptions.SharvaException;
@@ -88,11 +89,12 @@ public class TaskList implements TaskListService {
      * Displays all tasks in tasks with their corresponding indices.
      */
     public void list() {
-        StringBuilder result = new StringBuilder("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            result.append("\n").append(String.format("%d. %s", i + 1, tasks.get(i).toString()));
-        }
-        message.list(result.toString());
+        String result = IntStream.range(0, tasks.size())
+                .mapToObj(i -> String.format("%d. %s", i + 1, tasks.get(i).toString()))
+                .reduce(new StringBuilder("Here are the tasks in your list:"), (
+                        sb, task) -> sb.append("\n").append(task), StringBuilder::append)
+                .toString();
+        message.list(result);
     }
 
     /**
@@ -104,11 +106,12 @@ public class TaskList implements TaskListService {
                 .filter(task -> task.contains(input))
                 .toList();
 
-        StringBuilder result = new StringBuilder("Here are the matching tasks in your list:");
-        for (int i = 0; i < filteredList.size(); i++) {
-            result.append("\n").append(String.format("%d. %s", i + 1, filteredList.get(i).toString()));
-        }
-        message.list(result.toString());
+        String result = IntStream.range(0, filteredList.size())
+                .mapToObj(i -> String.format("%d. %s", i + 1, filteredList.get(i).toString()))
+                .reduce(new StringBuilder("Here are the tasks in your list:"), (
+                        sb, task) -> sb.append("\n").append(task), StringBuilder::append)
+                .toString();
+        message.list(result);
     }
 
 
