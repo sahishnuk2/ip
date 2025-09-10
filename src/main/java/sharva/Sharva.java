@@ -27,6 +27,7 @@ public class Sharva {
      */
     public Sharva(String filePath) {
         this.message = new Message();
+        assert filePath == null && !filePath.isEmpty() : "File path cannot be null or empty";
         this.storage = new Storage(filePath);
         try {
             Storage.LoadResult result = storage.load();
