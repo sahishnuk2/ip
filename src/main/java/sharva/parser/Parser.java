@@ -44,6 +44,22 @@ public class Parser {
             DateTimeFormatter.ofPattern("h:mma"),
             DateTimeFormatter.ofPattern("h.mma")
     );
+
+    // Command delimiters
+    private static final String BY_DELIMITER = " /by ";
+    private static final String FROM_DELIMITER = " /from ";
+    private static final String TO_DELIMITER = " /to ";
+
+    // Prefix lengths for command parsing
+    private static final int TODO_PREFIX_LENGTH = 5;
+    private static final int DEADLINE_PREFIX_LENGTH = 8;
+    private static final int EVENT_PREFIX_LENGTH = 5;
+
+    // Delimiter lengths for substring operations
+    private static final int BY_DELIMITER_LENGTH = 5;
+    private static final int FROM_DELIMITER_LENGTH = 7;
+    private static final int TO_DELIMITER_LENGTH = 5;
+
     private final TaskListService tasks;
 
     public Parser(TaskListService tasks) {
@@ -136,6 +152,24 @@ public class Parser {
     }
 
     /**
+     * Extracts and validates a task description from a substring operation.
+     * @param input the full input string
+     * @param startIndex the starting index for substring
+     * @param endIndex the ending index for substring
+     * @param errorMessage the error message to throw if description is empty
+     * @return the trimmed task description
+     * @throws InvalidArgumentsException if the description is empty
+     */
+    private String extractTaskDescription(
+            String input, int startIndex, int endIndex, String errorMessage) throws InvalidArgumentsException {
+        String description = input.substring(startIndex, endIndex).trim();
+        if (description.isEmpty()) {
+            throw new InvalidArgumentsException(errorMessage);
+        }
+        return description;
+    }
+
+    /**
      * Parses the user input string and delegates to the appropriate command method.
      * <p>
      * Recognised commands include: list, mark, unmark, add, delete, todo, deadline,
@@ -192,7 +226,7 @@ public class Parser {
     private void mark(String input) throws SharvaException {
         validateMarkInput(input);
         String[] strs = input.split(" ");
-        validateMarkCommandLength(strs);
+        validateIndexCommandLength(strs);
         int taskNumber = extractAndValidateTaskNumber(strs[1]);
         tasks.mark(taskNumber - 1);
     }
@@ -203,7 +237,7 @@ public class Parser {
         }
     }
 
-    private void validateMarkCommandLength(String[] strs) throws SharvaException {
+    private void validateIndexCommandLength(String[] strs) throws SharvaException {
         if (strs.length < 2) {
             throw new InvalidCommandException();
             // For errors like marks, mark1, markee...
@@ -223,7 +257,7 @@ public class Parser {
     private void unmark(String input) throws SharvaException {
         validateUnmarkInput(input);
         String[] strs = input.split(" ");
-        validateMarkCommandLength(strs);
+        validateIndexCommandLength(strs);
         int taskNumber = extractAndValidateTaskNumber(strs[1]);
         tasks.unmark(taskNumber - 1);
     }
@@ -239,7 +273,7 @@ public class Parser {
         validateDeleteInput(input);
 
         String[] strs = input.split(" ");
-        validateMarkCommandLength(strs);
+        validateIndexCommandLength(strs);
 
         int taskNumber = extractAndValidateTaskNumber(strs[1]);
         tasks.delete(taskNumber - 1);
@@ -253,7 +287,7 @@ public class Parser {
 
     private void toDo(String input) throws SharvaException {
         validateToDoInput(input);
-        String taskName = input.substring(5);
+        String taskName = input.substring(TODO_PREFIX_LENGTH);
         addTodo(taskName);
     }
 
@@ -274,7 +308,7 @@ public class Parser {
 
         int byIndex = findByIndex(input);
         String taskName = extractDeadlineTaskName(input, byIndex);
-        String by = extractByTime(input, byIndex);
+        String by = extractByDateTime(input, byIndex);
 
         LocalDateTime due = parseDateTime(by, true);
         addDeadline(taskName, due);
@@ -287,27 +321,39 @@ public class Parser {
     }
 
     private int findByIndex(String input) throws InvalidArgumentsException {
-        int byIndex = input.indexOf(" /by ");
+        int byIndex = input.indexOf(BY_DELIMITER);
         if (byIndex == -1) {
             throw new InvalidArgumentsException("When is it due?");
         }
         return byIndex;
     }
 
-    private String extractDeadlineTaskName(String input, int byIndex) throws InvalidArgumentsException {
-        String taskName = input.substring(8, byIndex).trim();
-        if (taskName.isEmpty()) {
-            throw new InvalidArgumentsException("What's the task name?");
+    /**
+     * Extracts and validates a time string from a substring operation.
+     * @param input the full input string
+     * @param startIndex the starting index for substring
+     * @param endIndex the ending index for substring (-1 means to end of string)
+     * @param errorMessage the error message to throw if time string is empty
+     * @return the trimmed time string
+     * @throws InvalidArgumentsException if the time string is empty
+     */
+    private String extractDateTimeString(
+            String input, int startIndex, int endIndex, String errorMessage) throws InvalidArgumentsException {
+        String timeString = endIndex == -1
+                ? input.substring(startIndex).trim()
+                : input.substring(startIndex, endIndex).trim();
+        if (timeString.isEmpty()) {
+            throw new InvalidArgumentsException(errorMessage);
         }
-        return taskName;
+        return timeString;
     }
 
-    private String extractByTime(String input, int byIndex) throws InvalidArgumentsException {
-        String by = input.substring(byIndex + 5).trim();
-        if (by.isEmpty()) {
-            throw new InvalidArgumentsException("When is it due?");
-        }
-        return by;
+    private String extractDeadlineTaskName(String input, int byIndex) throws InvalidArgumentsException {
+        return extractTaskDescription(input, DEADLINE_PREFIX_LENGTH, byIndex, "What's the task name?");
+    }
+
+    private String extractByDateTime(String input, int byIndex) throws InvalidArgumentsException {
+        return extractDateTimeString(input, byIndex + BY_DELIMITER_LENGTH, -1, "When is it due?");
     }
 
     private void addDeadline(String taskName, LocalDateTime by) {
@@ -324,8 +370,8 @@ public class Parser {
         validateIndexOrder(fromIndex, toIndex);
 
         String taskName = extractTaskName(input, fromIndex);
-        String from = extractFromTime(input, fromIndex, toIndex);
-        String to = extractToTime(input, toIndex);
+        String from = extractFromDateTime(input, fromIndex, toIndex);
+        String to = extractToDateTime(input, toIndex);
 
         LocalDateTime fromDateTime = parseDateTime(from, false);
         LocalDateTime toDateTime = parseDateTime(to, true);
@@ -341,7 +387,7 @@ public class Parser {
     }
 
     private int findFromIndex(String input) throws InvalidArgumentsException {
-        int fromIndex = input.indexOf(" /from ");
+        int fromIndex = input.indexOf(FROM_DELIMITER);
         if (fromIndex == -1) {
             throw new InvalidArgumentsException("When does the event start?");
         }
@@ -349,7 +395,7 @@ public class Parser {
     }
 
     private int findToIndex(String input) throws InvalidArgumentsException {
-        int toIndex = input.indexOf(" /to ");
+        int toIndex = input.indexOf(TO_DELIMITER);
         if (toIndex == -1) {
             throw new InvalidArgumentsException("When does the event end?");
         }
@@ -363,30 +409,19 @@ public class Parser {
     }
 
     private String extractTaskName(String input, int fromIndex) throws InvalidArgumentsException {
-        String taskName = input.substring(5, fromIndex).trim();
-        if (taskName.isEmpty()) {
-            throw new InvalidArgumentsException("What's the event name?");
-        }
-        return taskName;
+        return extractTaskDescription(input, EVENT_PREFIX_LENGTH, fromIndex, "What's the event name?");
     }
 
-    private String extractFromTime(String input, int fromIndex, int toIndex) throws InvalidArgumentsException {
-        String from = input.substring(fromIndex + 7, toIndex).trim();
-        if (from.isEmpty()) {
-            throw new InvalidArgumentsException("When does the event start?");
-        }
-        return from;
+    private String extractFromDateTime(String input, int fromIndex, int toIndex) throws InvalidArgumentsException {
+        return extractDateTimeString(input, fromIndex + FROM_DELIMITER_LENGTH, toIndex, "When does the event start?");
     }
 
-    private String extractToTime(String input, int toIndex) throws InvalidArgumentsException {
-        String to = input.substring(toIndex + 5).trim();
-        if (to.isEmpty()) {
-            throw new InvalidArgumentsException("When does the event end?");
-        }
-        return to;
+    private String extractToDateTime(String input, int toIndex) throws InvalidArgumentsException {
+        return extractDateTimeString(input, toIndex + TO_DELIMITER_LENGTH, -1, "When does the event end?");
     }
 
-    private void validateDateTimeOrder(LocalDateTime fromDateTime, LocalDateTime toDateTime) throws InvalidArgumentsException {
+    private void validateDateTimeOrder(
+            LocalDateTime fromDateTime, LocalDateTime toDateTime) throws InvalidArgumentsException {
         if (toDateTime.isBefore(fromDateTime)) {
             throw new InvalidArgumentsException("Trying time travel? We do no do that here...");
         }
