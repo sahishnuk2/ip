@@ -91,7 +91,9 @@ public class TaskList implements TaskListService {
     public void list() {
         String result = IntStream.range(0, tasks.size())
                 .mapToObj(i -> String.format("%d. %s", i + 1, tasks.get(i).toString()))
-                .reduce("Here are the tasks in your list:", (acc, task) -> acc + "\n" + task);
+                .reduce(new StringBuilder("Here are the tasks in your list:"), (
+                        sb, task) -> sb.append("\n").append(task), StringBuilder::append)
+                .toString();
         message.list(result);
     }
 
@@ -104,9 +106,11 @@ public class TaskList implements TaskListService {
                 .filter(task -> task.contains(input))
                 .toList();
 
-        String result = IntStream.range(0, tasks.size())
-                .mapToObj(i -> String.format("%d. %s", i + 1, tasks.get(i).toString()))
-                .reduce("Here are the matching tasks in your list:", (acc, task) -> acc + "\n" + task);
+        String result = IntStream.range(0, filteredList.size())
+                .mapToObj(i -> String.format("%d. %s", i + 1, filteredList.get(i).toString()))
+                .reduce(new StringBuilder("Here are the tasks in your list:"), (
+                        sb, task) -> sb.append("\n").append(task), StringBuilder::append)
+                .toString();
         message.list(result);
     }
 
