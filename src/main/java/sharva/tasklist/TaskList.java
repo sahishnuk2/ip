@@ -46,7 +46,7 @@ public class TaskList implements TaskListService {
             throw new InvalidIndexException();
         }
         tasks.get(index).markAsDone();
-        message.mark(tasks.get(index));
+        message.markUI(tasks.get(index));
     }
 
     /**
@@ -59,7 +59,7 @@ public class TaskList implements TaskListService {
             throw new InvalidIndexException();
         }
         tasks.get(index).undoTask();
-        message.unmark(tasks.get(index));
+        message.unmarkUI(tasks.get(index));
     }
 
     /**
@@ -68,7 +68,7 @@ public class TaskList implements TaskListService {
      */
     public void addTask(Task task) {
         tasks.add(task);
-        message.addTask(task, tasks.size());
+        message.addTaskUI(task, tasks.size());
     }
 
     /**
@@ -82,7 +82,7 @@ public class TaskList implements TaskListService {
         }
         Task task = tasks.get(index);
         tasks.remove(index);
-        message.deleteTask(task, tasks.size());
+        message.deleteTaskUI(task, tasks.size());
     }
 
     /**
@@ -94,7 +94,7 @@ public class TaskList implements TaskListService {
                 .reduce(new StringBuilder("Here are the tasks in your list:"), (
                         sb, task) -> sb.append("\n").append(task), StringBuilder::append)
                 .toString();
-        message.list(result);
+        message.listTasksUI(result);
     }
 
     /**
@@ -111,7 +111,7 @@ public class TaskList implements TaskListService {
                 .reduce(new StringBuilder("Here are the tasks in your list:"), (
                         sb, task) -> sb.append("\n").append(task), StringBuilder::append)
                 .toString();
-        message.list(result);
+        message.listTasksUI(result);
     }
 
 

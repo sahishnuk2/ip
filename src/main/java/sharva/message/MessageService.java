@@ -4,10 +4,10 @@ import sharva.tasks.Task;
 
 public interface MessageService {
     public void sayHello();
-    public void mark(Task task);
-    public void unmark(Task task);
-    public void addTask(Task task, int numberOfTasks);
-    public void deleteTask(Task task, int numberOfTasks);
-    public void list(String input);
-    public void echo(String input);
+    public void markUI(Task task);
+    public void unmarkUI(Task task);
+    public void addTaskUI(Task task, int numberOfTasks);
+    public void deleteTaskUI(Task task, int numberOfTasks);
+    public void listTasksUI(String input);
+    public void echoUI(String input);
 }

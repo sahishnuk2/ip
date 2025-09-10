@@ -1,7 +1,5 @@
 package sharva.message;
 
-import java.io.InputStream;
-
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import sharva.tasks.Task;
@@ -32,7 +30,7 @@ public class Message implements MessageService {
      * @param task the task to be marked
      */
     @Override
-    public void mark(Task task) {
+    public void markUI(Task task) {
         DialogBox d = DialogBox.getSharvaDialog("Nice! I've marked this task as done:\n" + task, sharvaImage);
         dialogContainer.getChildren().addAll(d);
     }
@@ -42,7 +40,7 @@ public class Message implements MessageService {
      * @param task the task to be unmarked
      */
     @Override
-    public void unmark(Task task) {
+    public void unmarkUI(Task task) {
         DialogBox d = DialogBox.getSharvaDialog("OK, I've marked this task as not done yet:\n" + task, sharvaImage);
         d.getStyleClass().add("orange");
         dialogContainer.getChildren().addAll(d);
@@ -55,7 +53,7 @@ public class Message implements MessageService {
      * @param numberOfTasks number of tasks in the tasklist
      */
     @Override
-    public void addTask(Task task, int numberOfTasks) {
+    public void addTaskUI(Task task, int numberOfTasks) {
         String sharvaDialog = String.format("Got it. I've added this task:\n%s\nNow you have %d task(s) in the list",
                         task, numberOfTasks);
         DialogBox d = DialogBox.getSharvaDialog(sharvaDialog, sharvaImage);
@@ -69,27 +67,33 @@ public class Message implements MessageService {
      * @param numberOfTasks number of tasks in the tasklist
      */
     @Override
-    public void deleteTask(Task task, int numberOfTasks) {
+    public void deleteTaskUI(Task task, int numberOfTasks) {
         String sharvaDialog = String.format("Noted. I've removed this task:\n%s\nNow you have %d task(s) in the list",
                 task, numberOfTasks);
         DialogBox d = DialogBox.getSharvaDialog(sharvaDialog, sharvaImage);
-        d.getStyleClass().add("red");
+        d.getStyleClass().add("orange");
         dialogContainer.getChildren().addAll(d);
     }
 
-    public void list(String input) {
+    /**
+     * Prints the given input string in a dialog box
+     * @param input list of tasks to be displayed within the dialog box
+     */
+    @Override
+    public void listTasksUI(String input) {
         DialogBox d = DialogBox.getSharvaDialog(input, sharvaImage);
         d.getStyleClass().add("yellow");
         dialogContainer.getChildren().addAll(d);
     }
 
     /**
-     * Prints the given input string surrounded by a horizontal border.
-     * @param input the string to be displayed within the border
+     * Prints the given input string in a dialog box
+     * @param input the string to be displayed within the dialog box
      */
     @Override
-    public void echo(String input) {
+    public void echoUI(String input) {
         DialogBox d = DialogBox.getSharvaDialog(input, sharvaImage);
+        d.getStyleClass().add("red");
         dialogContainer.getChildren().addAll(d);
     }
 }

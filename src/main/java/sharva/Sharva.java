@@ -33,10 +33,10 @@ public class Sharva {
             Storage.LoadResult result = storage.load();
             this.tasks = new TaskList(result.tasks, message);
             if (result.hasCorruptedLines()) {
-                message.echo("Some tasks were removed due to file corruption: " + result.error);
+                message.echoUI("Some tasks were removed due to file corruption: " + result.error);
             }
         } catch (SharvaException e) {
-            message.echo(e.getMessage());
+            message.echoUI(e.getMessage());
             this.tasks = new TaskList(message);
         }
         this.parser = new Parser(tasks);
@@ -56,7 +56,7 @@ public class Sharva {
             parser.parseInput(input);
             storage.save(tasks.getTasks());
         } catch (SharvaException e) {
-            message.echo(e.getMessage());
+            message.echoUI(e.getMessage());
         }
     }
 }

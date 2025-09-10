@@ -11,33 +11,33 @@ public class MessageMock implements MessageService {
     public boolean isEchoCalled = false;
 
     @Override
-    public void mark(Task task) {
+    public void markUI(Task task) {
         lastTask = task;
         lastAction = "mark";
     }
 
     @Override
-    public void unmark(Task task) {
+    public void unmarkUI(Task task) {
         lastTask = task;
         lastAction = "unmark";
     }
 
     @Override
-    public void addTask(Task task, int numberOfTasks) {
+    public void addTaskUI(Task task, int numberOfTasks) {
         lastTask = task;
         lastAction = "add";
         numOfTasks = numberOfTasks;
     }
 
     @Override
-    public void deleteTask(Task task, int numberOfTasks) {
+    public void deleteTaskUI(Task task, int numberOfTasks) {
         lastTask = task;
         lastAction = "delete";
         numOfTasks = numberOfTasks;
     }
 
     @Override
-    public void echo(String input) {
+    public void echoUI(String input) {
         lastInput = input;
         isEchoCalled = true;
     }
@@ -48,8 +48,8 @@ public class MessageMock implements MessageService {
     }
 
     @Override
-    public void list(String input) {
-        echo(input);
+    public void listTasksUI(String input) {
+        echoUI(input);
     }
 
     public void reset() {
