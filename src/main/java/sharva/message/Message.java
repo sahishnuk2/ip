@@ -1,5 +1,7 @@
 package sharva.message;
 
+import java.io.InputStream;
+
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import sharva.tasks.Task;
@@ -13,6 +15,7 @@ public class Message implements MessageService {
     private Image sharvaImage = new Image(this.getClass().getResourceAsStream("/images/duke.png"));
 
     public void setDialogContainer(VBox dialogContainer) {
+        assert dialogContainer != null : "Dialog container cannot be null";
         this.dialogContainer = dialogContainer;
     }
     /**

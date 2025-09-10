@@ -70,6 +70,7 @@ public class Parser {
      * @throws SharvaException if the input format is incorrect
      */
     public static LocalDate parseDate(String date) throws SharvaException {
+        assert date != null : "Date cannot be null";
         for (DateTimeFormatter formatter : DATE_FORMATTERS) {
             try {
                 return LocalDate.parse(date, formatter);
@@ -89,6 +90,7 @@ public class Parser {
      * @throws SharvaException if the input format is incorrect
      */
     public static LocalTime parseTime(String time) throws SharvaException {
+        assert time != null : "Time cannot be null";
         for (DateTimeFormatter formatter : TIME_FORMATTERS) {
             try {
                 return LocalTime.parse(time.toLowerCase(), formatter);
@@ -424,6 +426,7 @@ public class Parser {
     }
 
     private void addEvent(String taskName, LocalDateTime from, LocalDateTime to) {
+        assert !to.isBefore(from) : "To date cannot be before from date";
         Task task = new Event(taskName, from, to);
         tasks.addTask(task);
     }
