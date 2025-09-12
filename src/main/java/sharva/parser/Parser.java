@@ -48,8 +48,10 @@ public class Parser {
 
     // Prefix lengths for command parsing
     private static final int TODO_PREFIX_LENGTH = 5;
+    private static final int SHORT_TASK_COMMAND_PREFIX_LENGTH = 2;
     private static final int DEADLINE_PREFIX_LENGTH = 8;
     private static final int EVENT_PREFIX_LENGTH = 5;
+    private static final int FIND_PREFIX_LENGTH = 5;
 
     // Delimiter lengths for substring operations
     private static final int BY_DELIMITER_LENGTH = 5;
@@ -176,46 +178,67 @@ public class Parser {
      * @throws SharvaException if the input format is incorrect
      */
     public void parseInput(String input) throws SharvaException {
-        if (input.equals("list")) {
+        if (input.equals("list") || input.equals("l") || input.equals("ls")) {
             list();
-        } else if (input.startsWith("mark")) {
+        } else if (input.startsWith("mark") || input.startsWith("m ")) {
             mark(input);
-        } else if (input.startsWith("unmark")) {
+        } else if (input.startsWith("unmark") || input.startsWith("u ")) {
             unmark(input);
-        } else if (input.startsWith("delete")) {
+        } else if (input.startsWith("delete") || input.startsWith("del ")) {
             delete(input);
         } else if (input.startsWith("todo ")) {
-            toDo(input);
+            toDo(input, TODO_PREFIX_LENGTH);
+        } else if (input.startsWith("t ")) {
+            toDo(input, SHORT_TASK_COMMAND_PREFIX_LENGTH);
         } else if (input.startsWith("deadline ")) {
-            deadline(input);
+            deadline(input, DEADLINE_PREFIX_LENGTH);
+        } else if (input.startsWith("d ")) {
+            deadline(input, SHORT_TASK_COMMAND_PREFIX_LENGTH);
         } else if (input.startsWith("event ")) {
-            event(input);
+            event(input, EVENT_PREFIX_LENGTH);
+        } else if (input.startsWith("e ")) {
+            event(input, SHORT_TASK_COMMAND_PREFIX_LENGTH);
         } else if (input.startsWith("find ")) {
-            find(input);
+            find(input, FIND_PREFIX_LENGTH);
+        } else if (input.startsWith("f ")) {
+            find(input, SHORT_TASK_COMMAND_PREFIX_LENGTH);
         } else {
             handleInvalidInput(input);
         }
     }
 
     private void handleInvalidInput(String input) throws SharvaException {
-        if (input.equals("todo") || input.equals("deadline") || input.equals("event") || input.equals("find")) {
-            throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
-        }
+        handleEmptyCommands(input);
         throw new InvalidCommandException();
+    }
+
+    private void handleEmptyCommands(String input) throws SharvaException {
+        switch (input) {
+        case "todo", "deadline", "event", "find" ->
+                throw new InvalidArgumentsException("The description of a " + input + " cannot be empty");
+        case "t" -> throw new InvalidArgumentsException("The description of a todo cannot be empty");
+        case "d" -> throw new InvalidArgumentsException("The description of a deadline cannot be empty");
+        case "e" -> throw new InvalidArgumentsException("The description of a event cannot be empty");
+        case "m" -> throw new InvalidArgumentsException("Which task must I mark?");
+        case "u" -> throw new InvalidArgumentsException("Which task must I unmark?");
+        case "del" -> throw new InvalidArgumentsException("What task must I delete?");
+        case "f" -> throw new InvalidArgumentsException("The description of a find cannot be empty");
+        default -> { }
+        }
     }
 
     private void list() {
         tasks.list();
     }
 
-    private void find(String input) throws SharvaException {
+    private void find(String input, int prefixLength) throws SharvaException {
         validateFindInput(input);
-        String findItem = input.substring(5).trim();
+        String findItem = input.substring(prefixLength).trim();
         tasks.find(findItem);
     }
 
     private void validateFindInput(String input) throws InvalidArgumentsException {
-        if (input.trim().equals("find")) {
+        if (input.trim().equals("find") || input.trim().equals("f")) {
             throw new InvalidArgumentsException("The description of a find cannot be empty");
         }
     }
@@ -278,19 +301,19 @@ public class Parser {
     }
 
     private void validateDeleteInput(String input) throws InvalidArgumentsException {
-        if (input.trim().equals("delete")) {
+        if (input.trim().equals("delete") || input.trim().equals("del")) {
             throw new InvalidArgumentsException("Which task must I delete?");
         }
     }
 
-    private void toDo(String input) throws SharvaException {
+    private void toDo(String input, int prefixLength) throws SharvaException {
         validateToDoInput(input);
-        String taskName = input.substring(TODO_PREFIX_LENGTH);
+        String taskName = input.substring(prefixLength);
         addTodo(taskName);
     }
 
     private void validateToDoInput(String input) throws InvalidArgumentsException {
-        if (input.trim().equals("todo")) {
+        if (input.trim().equals("todo") || input.trim().equals("t")) {
             throw new InvalidArgumentsException("The description of a todo cannot be empty");
         }
     }
@@ -301,11 +324,11 @@ public class Parser {
     }
 
     // Deadline methods
-    private void deadline(String input) throws SharvaException {
+    private void deadline(String input, int prefixLength) throws SharvaException {
         validateDeadlineInput(input);
 
         int byIndex = findByIndex(input);
-        String taskName = extractDeadlineTaskName(input, byIndex);
+        String taskName = extractDeadlineTaskName(input, prefixLength, byIndex);
         String by = extractByDateTime(input, byIndex);
 
         LocalDateTime due = parseDateTime(by, true);
@@ -313,7 +336,7 @@ public class Parser {
     }
 
     private void validateDeadlineInput(String input) throws InvalidArgumentsException {
-        if (input.trim().equals("deadline")) {
+        if (input.trim().equals("deadline") || input.trim().equals("d")) {
             throw new InvalidArgumentsException("The description of a deadline cannot be empty");
         }
     }
@@ -346,8 +369,9 @@ public class Parser {
         return timeString;
     }
 
-    private String extractDeadlineTaskName(String input, int byIndex) throws InvalidArgumentsException {
-        return extractTaskDescription(input, DEADLINE_PREFIX_LENGTH, byIndex, "What's the task name?");
+    private String extractDeadlineTaskName(
+            String input, int prefixLength, int byIndex) throws InvalidArgumentsException {
+        return extractTaskDescription(input, prefixLength, byIndex, "What's the task name?");
     }
 
     private String extractByDateTime(String input, int byIndex) throws InvalidArgumentsException {
@@ -360,14 +384,14 @@ public class Parser {
     }
 
     // Event methods
-    private void event(String input) throws SharvaException {
+    private void event(String input, int prefixLength) throws SharvaException {
         validateEventInput(input);
 
         int fromIndex = findFromIndex(input);
         int toIndex = findToIndex(input);
         validateIndexOrder(fromIndex, toIndex);
 
-        String taskName = extractTaskName(input, fromIndex);
+        String taskName = extractTaskName(input, prefixLength, fromIndex);
         String from = extractFromDateTime(input, fromIndex, toIndex);
         String to = extractToDateTime(input, toIndex);
 
@@ -379,7 +403,7 @@ public class Parser {
     }
 
     private void validateEventInput(String input) throws InvalidArgumentsException {
-        if (input.trim().equals("event")) {
+        if (input.trim().equals("event") || input.trim().equals("e")) {
             throw new InvalidArgumentsException("The description of a event cannot be empty");
         }
     }
@@ -406,8 +430,8 @@ public class Parser {
         }
     }
 
-    private String extractTaskName(String input, int fromIndex) throws InvalidArgumentsException {
-        return extractTaskDescription(input, EVENT_PREFIX_LENGTH, fromIndex, "What's the event name?");
+    private String extractTaskName(String input, int prefixLength, int fromIndex) throws InvalidArgumentsException {
+        return extractTaskDescription(input, prefixLength, fromIndex, "What's the event name?");
     }
 
     private String extractFromDateTime(String input, int fromIndex, int toIndex) throws InvalidArgumentsException {
