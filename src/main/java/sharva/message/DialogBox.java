@@ -13,12 +13,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+/**
+ * A custom dialog box component for displaying messages in the JavaFX GUI.
+ * Extends HBox to provide a horizontal layout with text and image display.
+ */
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
     private ImageView displayPicture;
 
+    /**
+     * Creates a new DialogBox with the specified text and image.
+     *
+     * @param text The text message to display in the dialog
+     * @param img The image to display alongside the text
+     */
     public DialogBox(String text, Image img) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));

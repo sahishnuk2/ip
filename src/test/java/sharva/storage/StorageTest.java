@@ -1,14 +1,9 @@
 package sharva.storage;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import sharva.exceptions.SharvaException;
-import sharva.message.Message;
-import sharva.tasks.Deadline;
-import sharva.tasks.Event;
-import sharva.tasks.Task;
-import sharva.tasks.ToDo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +12,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import sharva.exceptions.SharvaException;
+import sharva.tasks.Deadline;
+import sharva.tasks.Event;
+import sharva.tasks.Task;
+import sharva.tasks.ToDo;
+
+
+
+
+/**
+ * Test class for Storage functionality.
+ * Tests saving and loading of tasks from file storage.
+ */
 public class StorageTest {
     private File tempFile;
     private Storage storage;
@@ -44,7 +54,7 @@ public class StorageTest {
     }
 
     @Test
-    public void load_existingTasks_returnsCorrectList() throws SharvaException, IOException{
+    public void load_existingTasks_returnsCorrectList() throws SharvaException, IOException {
         List<String> lines = List.of(
                 "T @@@ 0 @@@ task todo",
                 "D @@@ 1 @@@ task deadline @@@ 12/12/2025 0700"
@@ -83,9 +93,8 @@ public class StorageTest {
         Storage.LoadResult result = storage.load();
         List<Task> tasks = result.tasks;
 
-         String expected = """
-                 
-                 Skipping task (invalid task type)
+        String expected = """
+                 \nSkipping task (invalid task type)
                  Skipping task (invalid task status)
                  Skipping deadline task (invalid format)
                  Skipping task (invalid duration)
@@ -93,7 +102,7 @@ public class StorageTest {
                  """;
 
         assertEquals(3, tasks.size());
-        assertEquals(expected, result.error);
+        assertEquals(expected, result.getError());
     }
 
     @Test

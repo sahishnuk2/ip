@@ -1,14 +1,20 @@
 package sharva.tasks;
 
-import org.junit.jupiter.api.Test;
-import sharva.exceptions.InvalidArgumentsException;
-import sharva.exceptions.SharvaException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 
+import sharva.exceptions.InvalidArgumentsException;
+import sharva.exceptions.SharvaException;
+
+
+
+/**
+ * Test class for Task functionality.
+ * Tests the basic operations of Task subclasses including ToDo, Deadline, and Event.
+ */
 public class TaskTest {
 
     @Test

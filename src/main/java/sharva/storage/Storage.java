@@ -180,11 +180,20 @@ public class Storage {
         }
     }
 
-    // Inner class to encapsulate result
+    /**
+     * Inner class to encapsulate the result of loading tasks from storage.
+     * Contains the loaded tasks and any error messages from corrupted lines.
+     */
     public static class LoadResult {
         public final List<Task> tasks;
-        public String error = null;
+        private String error = null;
 
+        /**
+         * Creates a new LoadResult with the given tasks and error information.
+         *
+         * @param tasks The list of successfully loaded tasks
+         * @param corruptedLineErrors List of error messages from corrupted lines
+         */
         public LoadResult(List<Task> tasks, List<String> corruptedLineErrors) {
             this.tasks = tasks;
             this.error = buildErrorMessage(corruptedLineErrors);
@@ -200,6 +209,15 @@ public class Storage {
                 errors.append("\n").append(str);
             }
             return errors.toString();
+        }
+
+        /**
+         * Gets the error message containing details about corrupted lines.
+         *
+         * @return The error message, or null if no errors occurred
+         */
+        public String getError() {
+            return error;
         }
 
         public boolean hasCorruptedLines() {

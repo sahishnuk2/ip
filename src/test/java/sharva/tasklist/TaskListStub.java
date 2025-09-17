@@ -1,11 +1,14 @@
 package sharva.tasklist;
 
-import sharva.tasks.Task;
-import sharva.exceptions.SharvaException;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import sharva.tasks.Task;
+
+/**
+ * Stub implementation of TaskListService for testing purposes.
+ * Tracks method calls and provides controlled behavior for unit tests.
+ */
 public class TaskListStub implements TaskListService {
     private final List<String> calledMethods = new ArrayList<>();
 
@@ -14,12 +17,12 @@ public class TaskListStub implements TaskListService {
     }
 
     @Override
-    public void mark(int index) throws SharvaException{
+    public void mark(int index) {
         calledMethods.add("mark:" + (index + 1));
     }
 
     @Override
-    public void unmark(int index) throws SharvaException {
+    public void unmark(int index) {
         calledMethods.add("unmark:" + (index + 1));
     }
 

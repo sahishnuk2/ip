@@ -1,25 +1,31 @@
 package sharva.parser;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import sharva.exceptions.SharvaException;
-import sharva.tasklist.TaskListStub;
-import sharva.tasks.Deadline;
-import sharva.tasks.Event;
-import sharva.tasks.ToDo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import sharva.exceptions.SharvaException;
+import sharva.tasklist.TaskListStub;
+import sharva.tasks.Deadline;
+import sharva.tasks.Event;
+import sharva.tasks.ToDo;
+
+/**
+ * Test class for Parser functionality.
+ * Tests the parsing of various user input commands and date/time formats.
+ */
 public class ParserTest {
-    TaskListStub stub;
-    Parser parser;
+    private TaskListStub stub;
+    private Parser parser;
 
     @BeforeEach
     public void setUp() {
@@ -40,8 +46,8 @@ public class ParserTest {
         assertEquals(2, calls.size());
         assertEquals("add:" + new Deadline(
                 "deadline",
-                LocalDateTime.of(2025, 12, 12, 23, 59))
-        , calls.get(1));
+                LocalDateTime.of(2025, 12, 12, 23, 59)),
+                calls.get(1));
 
         parser.parseInput("event event /from 12122025 /to 13122025");
 
@@ -74,7 +80,7 @@ public class ParserTest {
     }
 
     @Test
-    public void list_default_callsListMethod() throws SharvaException{
+    public void list_default_callsListMethod() throws SharvaException {
         parser.parseInput("list");
         List<String> calls = stub.getCalledMethods();
         assertEquals(1, calls.size());
@@ -170,14 +176,20 @@ public class ParserTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"02122003 2119", "02/12/2003 9.19 pm", "02-12-2003 9:19pm", "2/12/2003 9.19pm", "2/12/03 9.19pm", "021203 21:19"})
+    @ValueSource(strings = {
+        "02122003 2119", "02/12/2003 9.19 pm", "02-12-2003 9:19pm",
+        "2/12/2003 9.19pm", "2/12/03 9.19pm", "021203 21:19"
+    })
     public void parseDateTime_validInputWithTime_correctDateTime(String input) throws SharvaException {
         LocalDateTime dateTime = Parser.parseDateTime(input, true);
         assertEquals(LocalDateTime.of(2003, 12, 2, 21, 19), dateTime);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"02122003 211", "02/12/2003 9.1 pm", "02-1-2003 9:9pm", "2/12/203 9.19m", "212/03 9.19pm", "021203 2:19"})
+    @ValueSource(strings = {
+        "02122003 211", "02/12/2003 9.1 pm", "02-1-2003 9:9pm",
+        "2/12/203 9.19m", "212/03 9.19pm", "021203 2:19"
+    })
     public void parseDateTime_invalidInputWithTime_exceptionThrown(String input) throws SharvaException {
         assertThrows(SharvaException.class, () -> Parser.parseDateTime(input, true));
     }

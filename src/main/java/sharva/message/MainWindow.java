@@ -10,6 +10,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import sharva.Sharva;
 
+/**
+ * The main window controller for the Sharva JavaFX GUI application.
+ * Handles user interactions, displays dialogs, and manages the communication with the Sharva chatbot.
+ */
 public class MainWindow extends AnchorPane {
     @FXML
     private ScrollPane scrollPane;
