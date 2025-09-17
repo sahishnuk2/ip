@@ -7,9 +7,9 @@ It helps you efficiently manage your daily tasks through a clean text-based chat
 Sharva provides an effective solution for organizing todos, deadlines, and events.
 
 ## QuickStart
-1. Ensure that you have Java `17` installed
-2. Download the latest `Sharva.jar` from the [releases]();
-3. Copy the file to a new folder
+1. Ensure that you have Java `17` installed.
+2. Download the latest `Sharva.jar` from the [releases](https://github.com/sahishnuk2/ip/releases).
+3. Copy the file to a new folder.
 4. Run the file using the following command. A GUI similar to below should appear.
 ```
 java -jar Sharva.jar
