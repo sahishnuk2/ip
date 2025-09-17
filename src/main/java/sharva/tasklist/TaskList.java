@@ -63,7 +63,7 @@ public class TaskList implements TaskListService {
     }
 
     /**
-     * Add the specified task to tasks.
+     * Adds the specified task to tasks.
      * @param task the task to be added
      */
     public void addTask(Task task) {
