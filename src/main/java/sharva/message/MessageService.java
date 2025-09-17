@@ -2,6 +2,10 @@ package sharva.message;
 
 import sharva.tasks.Task;
 
+/**
+ * Interface for message services that handle user interface interactions.
+ * Defines methods for displaying various types of messages and responses to the user.
+ */
 public interface MessageService {
     public void sayHello();
     public void markUI(Task task);

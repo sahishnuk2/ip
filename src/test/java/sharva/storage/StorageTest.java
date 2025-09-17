@@ -93,7 +93,7 @@ public class StorageTest {
                  """;
 
         assertEquals(3, tasks.size());
-        assertEquals(expected, result.error);
+        assertEquals(expected, result.getError());
     }
 
     @Test

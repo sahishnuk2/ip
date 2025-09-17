@@ -34,7 +34,7 @@ public class Sharva {
             Storage.LoadResult result = storage.load();
             this.tasks = new TaskList(result.tasks, message);
             if (result.hasCorruptedLines()) {
-                message.echoUI("Some tasks were removed due to file corruption: " + result.error);
+                message.echoUI("Some tasks were removed due to file corruption: " + result.getError());
             }
         } catch (SharvaException e) {
             message.echoUI(e.getMessage());
@@ -51,6 +51,12 @@ public class Sharva {
 
     }
 
+    /**
+     * Processes user input by parsing it and executing the corresponding command.
+     * Saves the updated task list to storage after processing.
+     *
+     * @param input The user input string to be processed
+     */
     public void run(String input) {
         try {
             parser.parseInput(input);

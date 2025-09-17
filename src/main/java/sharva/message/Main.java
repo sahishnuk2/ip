@@ -8,6 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * The main JavaFX application class that launches the Sharva GUI.
+ * Extends the JavaFX Application class to provide the entry point for the GUI application.
+ */
 public class Main extends Application {
 
     @Override
