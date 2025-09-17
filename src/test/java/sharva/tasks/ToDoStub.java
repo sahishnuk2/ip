@@ -1,8 +1,15 @@
 package sharva.tasks;
 
+/**
+ * Stub class for ToDo tasks used in testing.
+ * Provides a controlled implementation for testing purposes.
+ */
 public class ToDoStub extends ToDo {
     private boolean isDoneStub;
 
+    /**
+     * Creates a new ToDoStub with a default description for testing.
+     */
     public ToDoStub() {
         super("todo task");
 

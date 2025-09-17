@@ -1,19 +1,27 @@
 package sharva.tasklist;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import sharva.exceptions.SharvaException;
 import sharva.message.MessageMock;
 import sharva.tasks.Task;
 import sharva.tasks.ToDo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Test class for TaskList functionality.
+ * Tests task management operations including adding, deleting, and marking tasks.
+ */
 public class TaskListTest {
 
     private TaskList taskList;
@@ -32,24 +40,24 @@ public class TaskListTest {
         assertEquals("[T][ ] todo1", taskList.getTasks().get(0).toString());
         taskList.mark(0);
         assertEquals("[T][X] todo1", taskList.getTasks().get(0).toString());
-        assertEquals(tasks.get(0), messageMock.lastTask);
-        assertEquals("mark", messageMock.lastAction);
+        assertEquals(tasks.get(0), messageMock.getLastTask());
+        assertEquals("mark", messageMock.getLastAction());
     }
 
     @Test
     public void unmark_validIndex_success() throws SharvaException {
         taskList.mark(0);
         assertEquals("[T][X] todo1", taskList.getTasks().get(0).toString());
-        assertEquals(tasks.get(0), messageMock.lastTask);
-        assertEquals("mark", messageMock.lastAction);
+        assertEquals(tasks.get(0), messageMock.getLastTask());
+        assertEquals("mark", messageMock.getLastAction());
         taskList.unmark(0);
         assertEquals("[T][ ] todo1", taskList.getTasks().get(0).toString());
-        assertEquals(tasks.get(0), messageMock.lastTask);
-        assertEquals("unmark", messageMock.lastAction);
+        assertEquals(tasks.get(0), messageMock.getLastTask());
+        assertEquals("unmark", messageMock.getLastAction());
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-2, -1, 3})  // indices outside range
+    @ValueSource(ints = {-2, -1, 3}) // indices outside range
     // -2 -> refers tp -1, -1 refers to 0 and 3 refers to 4 (this is after parsing)
     public void mark_invalidIndex_exceptionThrown(int index) {
         try {
@@ -57,13 +65,13 @@ public class TaskListTest {
             fail();
         } catch (SharvaException e) {
             assertEquals("Invalid task number!", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-2, -1, 3})  // indices outside range
+    @ValueSource(ints = {-2, -1, 3}) // indices outside range
     // -2 -> refers tp -1, -1 refers to 0 and 3 refers to 4 (this is after parsing)
     public void unmark_invalidIndex_exceptionThrown(int index) {
         try {
@@ -71,8 +79,8 @@ public class TaskListTest {
             fail();
         } catch (SharvaException e) {
             assertEquals("Invalid task number!", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
@@ -80,16 +88,16 @@ public class TaskListTest {
     public void mark_markedTask_exceptionThrown() throws SharvaException {
         taskList.mark(0);
         assertEquals("[T][X] todo1", taskList.getTasks().get(0).toString());
-        assertEquals(tasks.get(0), messageMock.lastTask);
-        assertEquals("mark", messageMock.lastAction);
+        assertEquals(tasks.get(0), messageMock.getLastTask());
+        assertEquals("mark", messageMock.getLastAction());
         messageMock.reset();
         try {
             taskList.mark(0);
             fail();
         } catch (SharvaException e) {
             assertEquals("Completing a completed task? How hardworking", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
@@ -100,8 +108,8 @@ public class TaskListTest {
             fail();
         } catch (SharvaException e) {
             assertEquals("Bro, the task is not even completed", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
@@ -109,8 +117,8 @@ public class TaskListTest {
     public void addTask_default_success() {
         taskList.addTask(new ToDo("todo3"));
         assertEquals("[T][ ] todo3", taskList.getTasks().get(2).toString());
-        assertEquals(tasks.get(2), messageMock.lastTask);
-        assertEquals("add", messageMock.lastAction);
+        assertEquals(tasks.get(2), messageMock.getLastTask());
+        assertEquals("add", messageMock.getLastAction());
     }
 
     @Test
@@ -118,12 +126,12 @@ public class TaskListTest {
         Task deletedTask = tasks.get(0);
         taskList.delete(0);
         assertEquals("[T][ ] todo2", taskList.getTasks().get(0).toString());
-        assertEquals(deletedTask, messageMock.lastTask);
-        assertEquals("delete", messageMock.lastAction);
+        assertEquals(deletedTask, messageMock.getLastTask());
+        assertEquals("delete", messageMock.getLastAction());
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-2, -1, 10})  // indices outside range
+    @ValueSource(ints = {-2, -1, 10}) // indices outside range
     // -2 -> refers tp -1, -1 refers to 0 and 10 refers to 11 (this is after parsing)
     public void delete_invalidIndex_exceptionThrown(int index) {
         try {
@@ -131,13 +139,13 @@ public class TaskListTest {
             fail();
         } catch (SharvaException e) {
             assertEquals("Invalid task number!", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-2, -1, 10})  // indices outside range
+    @ValueSource(ints = {-2, -1, 10}) // indices outside range
     // -2 -> refers tp -1, -1 refers to 0 and 10 refers to 11 (this is after parsing)
     public void delete_emptyList_exceptionThrown(int index) throws SharvaException {
         taskList.delete(0);
@@ -149,8 +157,8 @@ public class TaskListTest {
             fail();
         } catch (SharvaException e) {
             assertEquals("Invalid task number!", e.getMessage());
-            assertNull(messageMock.lastTask);
-            assertNull(messageMock.lastAction);
+            assertNull(messageMock.getLastTask());
+            assertNull(messageMock.getLastAction());
         }
     }
 
@@ -163,7 +171,7 @@ public class TaskListTest {
         }
 
         taskList.list();
-        assertEquals(result.toString(), messageMock.lastInput);
-        assertTrue(messageMock.isEchoCalled);
+        assertEquals(result.toString(), messageMock.getLastInput());
+        assertTrue(messageMock.getIsEchoCalled());
     }
 }

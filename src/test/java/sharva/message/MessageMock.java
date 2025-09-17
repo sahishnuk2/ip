@@ -2,13 +2,17 @@ package sharva.message;
 
 import sharva.tasks.Task;
 
+/**
+ * Mock implementation of MessageService for testing purposes.
+ * Tracks method calls and arguments to verify proper interaction with the message service.
+ */
 public class MessageMock implements MessageService {
 
-    public Task lastTask = null;      // tracks the last task used
-    public String lastAction = null;  // "mark", "unmark", "add", "delete"
-    public int numOfTasks = 0;        // for add/delete
-    public String lastInput = null;   // for echo
-    public boolean isEchoCalled = false;
+    private Task lastTask = null; // tracks the last task used
+    private String lastAction = null; // "mark", "unmark", "add", "delete"
+    private int numOfTasks = 0; // for add/delete
+    private String lastInput = null; // for echo
+    private boolean isEchoCalled = false;
 
     @Override
     public void markUI(Task task) {
@@ -52,11 +56,34 @@ public class MessageMock implements MessageService {
         echoUI(input);
     }
 
+    /**
+     * Resets all tracked state to initial values for test cleanup.
+     */
     public void reset() {
         lastTask = null;
         lastAction = null;
         numOfTasks = 0;
         lastInput = null;
         isEchoCalled = false;
+    }
+
+    public Task getLastTask() {
+        return lastTask;
+    }
+
+    public String getLastAction() {
+        return lastAction;
+    }
+
+    public int getNumOfTasks() {
+        return numOfTasks;
+    }
+
+    public String getLastInput() {
+        return lastInput;
+    }
+
+    public boolean getIsEchoCalled() {
+        return isEchoCalled;
     }
 }
