@@ -24,7 +24,7 @@ java -jar Sharva.jar
 
 
 ## Commands
-Sharva can do the following
+Sharva can do the following:
 
 - Add To-Do, Deadline, and Event tasks
 - List all tasks
@@ -33,7 +33,7 @@ Sharva can do the following
 - Delete tasks
 - Find tasks by keyword
 - Exit the program
-
+---
 ### Adding To-Do task
 Adds a basic To-Do task
 
@@ -47,6 +47,7 @@ or
 todo finish Maths HW
 t finish Maths HW
 ```
+---
 ### Adding Deadline task
 Adds a task with a deadline
 
@@ -61,6 +62,7 @@ deadline finish Science HW /by 270925 17:00
 d finish Science HW /by 27/9/25 5pm
 deadline finish Science HW /by 27/09/25 5.00 pm
 ```
+---
 ### Adding Event task
 Adds an Event task that has a start time and end time
 
@@ -75,6 +77,7 @@ event project /from 120325 /to 120425
 e project /from 120325 0000 /to 120425 2359
 event project /from 12/3/25 /to 12/4/25
 ```
+---
 ### Marking task as done
 Marks a selected task based on index
 
@@ -88,6 +91,7 @@ or
 mark 1
 m 1
 ```
+---
 ### Unmarking task as not done
 Unmarks a selected task based on index
 
@@ -101,6 +105,7 @@ or
 unmark 1
 u 1
 ```
+---
 ### Deleting Tasks
 Deletes a selected task based on index
 
@@ -114,6 +119,7 @@ or
 delete 2
 del 2
 ```
+---
 ### Finding tasks by keyword
 Filters task by keyword
 
@@ -127,6 +133,7 @@ or
 find maths
 f Maths
 ```
+---
 ### Exiting the program
 Exits the program
 
