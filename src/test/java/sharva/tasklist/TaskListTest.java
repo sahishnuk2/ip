@@ -174,4 +174,14 @@ public class TaskListTest {
         assertEquals(result.toString(), messageMock.getLastInput());
         assertTrue(messageMock.getIsEchoCalled());
     }
+
+    @Test
+    public void find_default_success() {
+        StringBuilder result = new StringBuilder("Here are the tasks in your list:");
+        result.append("\n").append(String.format("%d. %s", 1, tasks.get(0).toString()));
+
+        taskList.find("todo1");
+        assertEquals(result.toString(), messageMock.getLastInput());
+        assertTrue(messageMock.getIsEchoCalled());
+    }
 }

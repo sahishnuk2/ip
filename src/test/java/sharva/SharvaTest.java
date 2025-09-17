@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
  * Contains placeholder tests that will be implemented later.
  */
 public class SharvaTest {
-    @Test
-    public void dummyTest() {
-        assertEquals(2, 2);
-    }
+//    @Test
+//    public void dummyTest() {
+//        assertEquals(2, 2);
+//    }
 }
