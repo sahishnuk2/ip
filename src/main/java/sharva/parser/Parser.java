@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Locale;
 
 import sharva.exceptions.InvalidArgumentsException;
 import sharva.exceptions.InvalidCommandException;
@@ -35,10 +36,10 @@ public class Parser {
     private static final List<DateTimeFormatter> TIME_FORMATTERS = List.of(
             DateTimeFormatter.ofPattern("HHmm"),
             DateTimeFormatter.ofPattern("HH:mm"),
-            DateTimeFormatter.ofPattern("h:mm a"),
-            DateTimeFormatter.ofPattern("h.mm a"),
-            DateTimeFormatter.ofPattern("h:mma"),
-            DateTimeFormatter.ofPattern("h.mma")
+            DateTimeFormatter.ofPattern("h:mm a").withLocale(Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("h.mm a").withLocale(Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("h:mma").withLocale(Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("h.mma").withLocale(Locale.ENGLISH)
     );
 
     // Command delimiters
@@ -95,7 +96,7 @@ public class Parser {
         assert time != null : "Time cannot be null";
         for (DateTimeFormatter formatter : TIME_FORMATTERS) {
             try {
-                return LocalTime.parse(time.toLowerCase(), formatter);
+                return LocalTime.parse(time.toLowerCase(Locale.ENGLISH), formatter);
             } catch (DateTimeParseException e) {
                 // Try next formatter
             }
