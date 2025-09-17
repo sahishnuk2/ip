@@ -33,6 +33,7 @@ Sharva can do the following:
 - Delete tasks
 - Find tasks by keyword
 - Exit the program
+
 ---
 ### Adding To-Do task
 Adds a basic To-Do task
@@ -121,12 +122,12 @@ del 2
 ```
 ---
 ### Finding tasks by keyword
-Filters task by keyword
+Search for tasks using keyword
 
 **Format**:
 `find <keyword>`
 or
-`f <keyword`
+`f <keyword>`
 
 **Example**:
 ```
