@@ -96,7 +96,7 @@ public class Parser {
         assert time != null : "Time cannot be null";
         for (DateTimeFormatter formatter : TIME_FORMATTERS) {
             try {
-                return LocalTime.parse(time.toLowerCase(Locale.ENGLISH), formatter);
+                return LocalTime.parse(time.toUpperCase(Locale.ENGLISH), formatter);
             } catch (DateTimeParseException e) {
                 // Try next formatter
             }
