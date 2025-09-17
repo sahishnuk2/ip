@@ -25,8 +25,9 @@ public class Sharva {
      *
      * @param filePath the path of the file where tasks are stored
      */
-    public Sharva(String filePath) {
+    public Sharva(String filePath, VBox dialogContainer) {
         this.message = new Message();
+        this.message.setDialogContainer(dialogContainer);
         assert filePath != null && !filePath.isEmpty() : "File path cannot be null or empty";
         this.storage = new Storage(filePath);
         try {
@@ -45,8 +46,7 @@ public class Sharva {
     /**
      * Runs the chatbot until the user types "bye".
      */
-    public void start(VBox dialogContainer) {
-        message.setDialogContainer(dialogContainer);
+    public void start(/*VBox dialogContainer*/) {
         message.sayHello(); // add the dialogBox to the dialogContainer
 
     }

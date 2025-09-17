@@ -29,9 +29,9 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    public void setSharva(Sharva sharva) {
-        this.sharva = sharva;
-        this.sharva.start(this.dialogContainer);
+    public void setSharva() {
+        this.sharva = new Sharva("./data/sharva.txt", this.dialogContainer);
+        this.sharva.start();
     }
 
     @FXML

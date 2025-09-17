@@ -7,10 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import sharva.Sharva;
 
 public class Main extends Application {
-    private Sharva sharva = new Sharva("./data/sharva.txt");
 
     @Override
     public void start(Stage stage) {
@@ -21,7 +19,7 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setMinHeight(220);
             stage.setMinWidth(417);
-            fxmlLoader.<MainWindow>getController().setSharva(sharva);
+            fxmlLoader.<MainWindow>getController().setSharva();
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
