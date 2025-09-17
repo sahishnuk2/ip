@@ -1,25 +1,31 @@
 .root {
     main-color: rgb(237, 255, 242);
-    -fx-background-color: main-color;
+    /*-fx-background-color: main-color;*/
+    -fx-background-color: linear-gradient(to bottom, #f0fff4, #c8facc);
 }
 
 .text-field {
-    -fx-background-color: #d9ffe2;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #a5d6a7;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
     -fx-font: 20px "Calibri";
 }
 
 .button {
-    -fx-background-color: lightgreen;
+    -fx-background-color: #81c784;
+    -fx-text-fill: white;
     -fx-font: italic bold 16px "Calibri";
+    -fx-background-radius: 8px;
 }
 
 .button:hover {
-    -fx-background-color: mediumspringgreen;
+    -fx-background-color: #66bb6a;
     -fx-font-size: 18px;
 }
 
 .button:pressed {
-    -fx-background-color: green;
+    -fx-background-color: #57a05a;
     -fx-font-size: 20px;
 }
 
@@ -30,11 +36,11 @@
 
 .scroll-bar {
     -fx-font-size: 10px;  /* Change width of scroll bar. */
-    -fx-background-color: main-color;
+    -fx-background-color: #f0fff4;
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: olive;
+    -fx-background-color: #a5d6a7;
     -fx-background-radius: 1em;
 }
 
