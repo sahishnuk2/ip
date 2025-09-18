@@ -8,7 +8,7 @@
 
 **Solution**: Claude systematically fixed all violations by:
 - Adding missing Javadoc documentation for classes, methods, and constructors
-- Fixing import order issues (Java imports → external libraries → static imports)
+- Fixing import order issues
 - Splitting long lines (206+ characters → under 120 character limit)
 - Correcting visibility modifiers and spacing issues
 - Cleaning up test files and removing commented code
