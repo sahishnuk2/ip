@@ -121,6 +121,19 @@ delete 2
 del 2
 ```
 ---
+### Listing tasks
+List all tasks
+
+**Format**:
+`list` or `ls` or `l`
+
+**Example**:
+```
+list
+ls
+l
+```
+---
 ### Finding tasks by keyword
 Search for tasks using keyword
 
